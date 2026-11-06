@@ -2,237 +2,313 @@
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Política de privacidade | Rentable</title>
     <meta
       name="description"
       content="Como o Rentable trata seus dados pessoais, em linguagem simples (LGPD)."
     />
-    <meta name="theme-color" content="#7A1F2E" />
+    <meta name="theme-color" content="#4F1019" />
     <link rel="canonical" href="https://rentable.com.br/privacidade/" />
-    <link rel="icon" type="image/png" sizes="48x48" href="../assets/favicon.png" />
-    <link rel="apple-touch-icon" href="../assets/icone-512.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon.png" />
+    <link rel="apple-touch-icon" href="/assets/icone-512.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Rentable" />
+    <meta property="og:title" content="Política de privacidade | Rentable" />
+    <meta
+      property="og:description"
+      content="Como o Rentable trata seus dados pessoais, em linguagem simples (LGPD)."
+    />
+    <meta property="og:url" content="https://rentable.com.br/privacidade/" />
+    <meta property="og:image" content="https://rentable.com.br/assets/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script>
+      // Antes de pintar: com "reduzir movimento" não há animação; a abertura aparece uma vez por visita, só no início.
+      (function (d, home) {
+        var h = d.documentElement;
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var seen = false;
+        try {
+          seen = sessionStorage.getItem('rentable.abertura') === '1';
+        } catch (e) {}
+        h.className += reduce ? ' reduce' : ' motion';
+        if (reduce || seen || !home) h.className += ' no-intro';
+        setTimeout(function () {
+          if (!window.__rentableReady) h.className = h.className.replace(' motion', ' reduce');
+        }, 4000);
+      })(document, false);
+    </script>
     <link
       rel="preload"
-      href="../assets/fontes/bakbak-one-latin.woff2"
+      href="/assets/fontes/bakbak-one-latin.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
     <link
       rel="preload"
-      href="../assets/fontes/akatab-400-latin.woff2"
+      href="/assets/fontes/akatab-400-latin.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="../css/site.css" />
+    <link rel="stylesheet" href="/css/site.css" />
+    <script src="/js/vendor/lenis.min.js" defer></script>
+    <script src="/js/site.js" defer></script>
   </head>
-  <body>
+  <body class="page-">
     <a class="skip" href="#conteudo">Pular para o conteúdo</a>
-    <header class="topbar is-scrolled">
-      <div class="wrap topbar-row">
-        <a class="brand" href="../" aria-label="Rentable, página inicial">
-          <img src="../assets/logo-casa-bordo.png" alt="" width="530" height="420" />
+    <div class="sky" aria-hidden="true"></div>
+    <canvas class="stars" aria-hidden="true" data-stars></canvas>
+    <div class="cursor-glow" aria-hidden="true" data-cursor></div>
+
+    <header class="nav" data-nav>
+      <div class="nav-inner">
+        <a class="nav-brand" href="/" aria-label="Rentable, página inicial">
+          <img src="/assets/logo-casa-branca.png" alt="" width="530" height="420" />
           <span>rentable</span>
         </a>
-        <a class="pill pill-solid pill-small" href="../#baixar">Baixar o app</a>
+        <nav class="nav-pills" aria-label="Páginas">
+          <a class="pill-link" href="/"
+            ><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" /></svg
+            >Início</a
+          >
+          <a class="pill-link" href="/funcionalidades/"
+            ><svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="3" width="7" height="7" rx="1.5" />
+              <rect x="14" y="3" width="7" height="7" rx="1.5" />
+              <rect x="3" y="14" width="7" height="7" rx="1.5" />
+              <rect x="14" y="14" width="7" height="7" rx="1.5" /></svg
+            >Funcionalidades</a
+          >
+          <a class="pill-link" href="/duvidas/"
+            ><svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6" />
+              <path d="M12 17.5h.01" /></svg
+            >Dúvidas</a
+          >
+          <a class="pill-link" href="/suporte/"
+            ><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg
+            >Contato</a
+          >
+        </nav>
+        <a class="nav-cta magnetic" href="/#baixar" data-open-waitlist>Baixar o app</a>
+        <button
+          class="nav-menu"
+          type="button"
+          aria-expanded="false"
+          aria-controls="menu"
+          data-menu-toggle
+        >
+          <i aria-hidden="true"></i><span>Menu</span>
+        </button>
       </div>
     </header>
+    <nav class="menu-sheet" id="menu" aria-label="Páginas" data-menu>
+      <a href="/">Início</a>
+      <a href="/funcionalidades/">Funcionalidades</a>
+      <a href="/duvidas/">Dúvidas</a>
+      <a href="/suporte/">Contato</a>
+      <a href="/#baixar" data-open-waitlist>Baixar o app</a>
+    </nav>
 
     <main id="conteudo" class="doc">
       <div class="wrap doc-inner">
         <h1>Política de privacidade</h1>
         <p class="updated">Atualizada em 5 de novembro de 2026.</p>
-
-        <p>
-          Este texto explica, em linguagem simples, quais dados pessoais o Rentable usa, para quê,
-          com quem compartilha e como você controla tudo isso. Ele vale para o aplicativo Rentable e
-          para este site, e segue a Lei Geral de Proteção de Dados (Lei 13.709/2018, a LGPD).
-        </p>
-
-        <h2>Quem cuida dos seus dados</h2>
-        <p>
-          O Rentable é o controlador dos dados pessoais tratados no app. Para qualquer assunto sobre
-          os seus dados, escreva para
-          <a href="mailto:contato@rentable.com.br">contato@rentable.com.br</a>.
-        </p>
-
-        <h2>Quais dados usamos</h2>
-        <ul>
-          <li>
-            <b>Dados da conta:</b> nome, como você quer ser chamado, e-mail, celular e foto de
-            perfil, se você escolher uma.
-          </li>
-          <li>
-            <b>Respostas do primeiro acesso:</b> seu perfil de uso (proprietário, morador, inquilino
-            etc.), objetivos e dificuldades.
-          </li>
-          <li>
-            <b>O que você cadastra:</b> imóveis, inquilinos, contratos, cobranças, contas, despesas,
-            prestadores de serviço, documentos e fotos.
-          </li>
-          <li>
-            <b>Contratos enviados para leitura:</b> as páginas ou o PDF que você envia quando pede a
-            leitura por IA.
-          </li>
-          <li>
-            <b>Dados técnicos mínimos:</b> registros de acesso e informações do aparelho necessárias
-            para o app funcionar com segurança.
-          </li>
-        </ul>
-        <p>
-          Quando você cadastra um inquilino ou um prestador, você nos passa dados de outra pessoa.
-          Cadastre só o necessário para administrar a locação.
-        </p>
-
-        <h2>Para que usamos</h2>
-        <ul>
-          <li>
-            Para prestar o serviço: organizar imóveis, aluguéis, vencimentos, cálculos e avisos
-            (execução do contrato com você).
-          </li>
-          <li>
-            Para adaptar o app ao seu perfil e melhorar o produto, a partir das suas respostas
-            (legítimo interesse).
-          </li>
-          <li>Para cumprir obrigações legais e proteger sua conta contra fraudes.</li>
-          <li>
-            Para enviar novidades e dicas por e-mail, somente se você autorizar. Você pode retirar a
-            autorização quando quiser.
-          </li>
-        </ul>
-
-        <h2>Leitura de contrato por IA</h2>
-        <p>
-          Quando você pede a leitura de um contrato, as páginas enviadas são processadas pela
-          Anthropic, empresa que fornece o modelo de inteligência artificial Claude, apenas para
-          encontrar os dados do contrato (valor, datas, índice de reajuste, multa e partes). O
-          resultado volta para você conferir antes de salvar. Pelos termos comerciais da Anthropic,
-          esse conteúdo não é usado para treinar os modelos dela.
-        </p>
-
-        <h2>Com quem compartilhamos</h2>
-        <ul>
-          <li><b>Supabase:</b> hospedagem, banco de dados e login.</li>
-          <li><b>Anthropic:</b> leitura de contratos por IA, só quando você usa esse recurso.</li>
-          <li>
-            <b>Resend:</b> envio dos e-mails da conta, como o código de confirmação e os avisos que
-            você escolher receber por e-mail.
-          </li>
-          <li>
-            <b>Google e Apple:</b> se você entrar com essas contas, para entregar notificações no
-            celular e para processar assinaturas feitas pelas lojas.
-          </li>
-          <li><b>Autoridades:</b> quando a lei ou uma ordem judicial exigir.</li>
-        </ul>
-        <p>Não vendemos seus dados pessoais.</p>
-
-        <h2>Dados fora do Brasil</h2>
-        <p>
-          Alguns desses fornecedores guardam ou processam dados fora do Brasil, por exemplo nos
-          Estados Unidos. Nesses casos, a transferência segue as regras do artigo 33 da LGPD, com
-          contratos que exigem proteção adequada.
-        </p>
-
-        <h2>Por quanto tempo guardamos</h2>
-        <p>
-          Enquanto sua conta existir. Quando você exclui a conta, apagamos seus dados, exceto o que
-          a lei manda guardar: os registros de acesso ao app ficam por 6 meses (Marco Civil da
-          Internet, art. 15) e outros dados podem ficar pelo prazo que uma lei específica exigir.
-        </p>
-
-        <h2>Seus direitos</h2>
-        <p>Pelo artigo 18 da LGPD, você pode pedir, a qualquer momento:</p>
-        <ul>
-          <li>confirmação de que tratamos seus dados e acesso a eles;</li>
-          <li>correção de dados incompletos, errados ou desatualizados;</li>
-          <li>anonimização, bloqueio ou eliminação de dados desnecessários;</li>
-          <li>portabilidade dos dados para outro serviço;</li>
-          <li>informação sobre com quem compartilhamos;</li>
-          <li>revogação do consentimento, quando ele for a base do uso.</li>
-        </ul>
-        <div class="box">
-          <p>Corrija seus dados em <b>Mais › Meu perfil</b>.</p>
+        <div class="paper" data-reveal>
           <p>
-            Exclua a conta e todos os dados em <b>Mais › Configurações › Excluir conta</b>, ou veja
-            <a href="../excluir-conta/">como pedir a exclusão sem o app</a>.
+            Este texto explica, em linguagem simples, quais dados pessoais o Rentable usa, para quê,
+            com quem compartilha e como você controla tudo isso. Ele vale para o aplicativo Rentable
+            e para este site, e segue a Lei Geral de Proteção de Dados (Lei 13.709/2018, a LGPD).
           </p>
+
+          <h2>Quem cuida dos seus dados</h2>
           <p>
-            Para os outros pedidos, escreva para
-            <a href="mailto:contato@rentable.com.br">contato@rentable.com.br</a>. Respondemos em até
-            15 dias.
+            O Rentable é o controlador dos dados pessoais tratados no app. Para qualquer assunto
+            sobre os seus dados, escreva para
+            <a href="mailto:contato@rentable.com.br">contato@rentable.com.br</a>.
+          </p>
+
+          <h2>Quais dados usamos</h2>
+          <ul>
+            <li>
+              <b>Dados da conta:</b> nome, como você quer ser chamado, e-mail, celular e foto de
+              perfil, se você escolher uma.
+            </li>
+            <li>
+              <b>Respostas do primeiro acesso:</b> seu perfil de uso (proprietário, morador,
+              inquilino etc.), objetivos e dificuldades.
+            </li>
+            <li>
+              <b>O que você cadastra:</b> imóveis, inquilinos, contratos, cobranças, contas,
+              despesas, prestadores de serviço, documentos e fotos.
+            </li>
+            <li>
+              <b>Contratos enviados para leitura:</b> as páginas ou o PDF que você envia quando pede
+              a leitura por IA.
+            </li>
+            <li>
+              <b>Dados técnicos mínimos:</b> registros de acesso e informações do aparelho
+              necessárias para o app funcionar com segurança.
+            </li>
+          </ul>
+          <p>
+            Quando você cadastra um inquilino ou um prestador, você nos passa dados de outra pessoa.
+            Cadastre só o necessário para administrar a locação.
+          </p>
+
+          <h2>Para que usamos</h2>
+          <ul>
+            <li>
+              Para prestar o serviço: organizar imóveis, aluguéis, vencimentos, cálculos e avisos
+              (execução do contrato com você).
+            </li>
+            <li>
+              Para adaptar o app ao seu perfil e melhorar o produto, a partir das suas respostas
+              (legítimo interesse).
+            </li>
+            <li>Para cumprir obrigações legais e proteger sua conta contra fraudes.</li>
+            <li>
+              Para enviar novidades e dicas por e-mail, somente se você autorizar. Você pode retirar
+              a autorização quando quiser.
+            </li>
+          </ul>
+
+          <h2>Leitura de contrato por IA</h2>
+          <p>
+            Quando você pede a leitura de um contrato, as páginas enviadas são processadas pela
+            Anthropic, empresa que fornece o modelo de inteligência artificial Claude, apenas para
+            encontrar os dados do contrato (valor, datas, índice de reajuste, multa e partes). O
+            resultado volta para você conferir antes de salvar. Pelos termos comerciais da
+            Anthropic, esse conteúdo não é usado para treinar os modelos dela.
+          </p>
+
+          <h2>Com quem compartilhamos</h2>
+          <ul>
+            <li><b>Supabase:</b> hospedagem, banco de dados e login.</li>
+            <li><b>Anthropic:</b> leitura de contratos por IA, só quando você usa esse recurso.</li>
+            <li>
+              <b>Resend:</b> envio dos e-mails da conta, como o código de confirmação e os avisos
+              que você escolher receber por e-mail.
+            </li>
+            <li>
+              <b>Google e Apple:</b> se você entrar com essas contas, para entregar notificações no
+              celular e para processar assinaturas feitas pelas lojas.
+            </li>
+            <li><b>Autoridades:</b> quando a lei ou uma ordem judicial exigir.</li>
+          </ul>
+          <p>Não vendemos seus dados pessoais.</p>
+
+          <h2>Dados fora do Brasil</h2>
+          <p>
+            Alguns desses fornecedores guardam ou processam dados fora do Brasil, por exemplo nos
+            Estados Unidos. Nesses casos, a transferência segue as regras do artigo 33 da LGPD, com
+            contratos que exigem proteção adequada.
+          </p>
+
+          <h2>Por quanto tempo guardamos</h2>
+          <p>
+            Enquanto sua conta existir. Quando você exclui a conta, apagamos seus dados, exceto o
+            que a lei manda guardar: os registros de acesso ao app ficam por 6 meses (Marco Civil da
+            Internet, art. 15) e outros dados podem ficar pelo prazo que uma lei específica exigir.
+          </p>
+
+          <h2>Seus direitos</h2>
+          <p>Pelo artigo 18 da LGPD, você pode pedir, a qualquer momento:</p>
+          <ul>
+            <li>confirmação de que tratamos seus dados e acesso a eles;</li>
+            <li>correção de dados incompletos, errados ou desatualizados;</li>
+            <li>anonimização, bloqueio ou eliminação de dados desnecessários;</li>
+            <li>portabilidade dos dados para outro serviço;</li>
+            <li>informação sobre com quem compartilhamos;</li>
+            <li>revogação do consentimento, quando ele for a base do uso.</li>
+          </ul>
+          <div class="box">
+            <p>Corrija seus dados em <b>Mais › Meu perfil</b>.</p>
+            <p>
+              Exclua a conta e todos os dados em <b>Mais › Configurações › Excluir conta</b>, ou
+              veja <a href="/excluir-conta/">como pedir a exclusão sem o app</a>.
+            </p>
+            <p>
+              Para os outros pedidos, escreva para
+              <a href="mailto:contato@rentable.com.br">contato@rentable.com.br</a>. Respondemos em
+              até 15 dias.
+            </p>
+          </div>
+
+          <h2>Segurança</h2>
+          <p>
+            Usamos conexão criptografada, acesso restrito por conta (cada pessoa só vê os próprios
+            dados) e armazenamento seguro no celular para a senha salva com Face ID ou digital.
+          </p>
+
+          <h2>Idade mínima</h2>
+          <p>O Rentable é feito para maiores de 18 anos.</p>
+
+          <h2 id="lista">Lista de espera do site</h2>
+          <p>
+            Se você deixar seu e-mail no site para ser avisado do lançamento, guardamos o e-mail, o
+            sistema escolhido (Android ou iPhone), se você quer receber também dicas e novidades e a
+            data do cadastro. Para barrar cadastros em massa, guardamos ainda um código calculado a
+            partir do endereço IP da conexão; o IP em si não é guardado.
+          </p>
+          <ul>
+            <li>
+              <b>Para quê:</b> avisar quando o app chegar ao Google Play ou à App Store e, só se
+              você marcar, enviar dicas e novidades do Rentable.
+            </li>
+            <li><b>Base legal:</b> o seu consentimento, que você pode retirar quando quiser.</li>
+            <li>
+              <b>Onde fica:</b> no banco de dados do Rentable, no Supabase. Não compartilhamos a
+              lista com ninguém.
+            </li>
+            <li>
+              <b>Por quanto tempo:</b> até o aviso do lançamento ser enviado; depois disso, só ficam
+              na lista as pessoas que pediram novidades. Você pode sair antes escrevendo para
+              <a href="mailto:contato@rentable.com.br?subject=Sair%20da%20lista%20de%20espera"
+                >contato@rentable.com.br</a
+              >.
+            </li>
+          </ul>
+
+          <h2>Este site</h2>
+          <p>
+            O site rentable.com.br não usa cookies nem ferramentas de análise de visitas. Ele guarda
+            no seu navegador só o e-mail que você cadastrou na lista de espera, para mostrar que
+            você já está nela, e se a animação de abertura já foi mostrada.
+          </p>
+
+          <h2>Mudanças nesta política</h2>
+          <p>
+            Quando mudarmos algo importante, avisamos no app e pedimos um novo aceite. A data no
+            alto desta página mostra a versão em vigor.
           </p>
         </div>
-
-        <h2>Segurança</h2>
-        <p>
-          Usamos conexão criptografada, acesso restrito por conta (cada pessoa só vê os próprios
-          dados) e armazenamento seguro no celular para a senha salva com Face ID ou digital.
-        </p>
-
-        <h2>Idade mínima</h2>
-        <p>O Rentable é feito para maiores de 18 anos.</p>
-
-        <h2 id="lista">Lista de espera do site</h2>
-        <p>
-          Se você deixar seu e-mail no site para ser avisado do lançamento, guardamos o e-mail, o
-          sistema escolhido (Android ou iPhone), se você quer receber também dicas e novidades e a
-          data do cadastro. Para barrar cadastros em massa, guardamos ainda um código calculado a
-          partir do endereço IP da conexão; o IP em si não é guardado.
-        </p>
-        <ul>
-          <li>
-            <b>Para quê:</b> avisar quando o app chegar ao Google Play ou à App Store e, só se você
-            marcar, enviar dicas e novidades do Rentable.
-          </li>
-          <li><b>Base legal:</b> o seu consentimento, que você pode retirar quando quiser.</li>
-          <li>
-            <b>Onde fica:</b> no banco de dados do Rentable, no Supabase. Não compartilhamos a lista
-            com ninguém.
-          </li>
-          <li>
-            <b>Por quanto tempo:</b> até o aviso do lançamento ser enviado; depois disso, só ficam
-            na lista as pessoas que pediram novidades. Você pode sair antes escrevendo para
-            <a href="mailto:contato@rentable.com.br?subject=Sair%20da%20lista%20de%20espera"
-              >contato@rentable.com.br</a
-            >.
-          </li>
-        </ul>
-
-        <h2>Este site</h2>
-        <p>
-          O site rentable.com.br não usa cookies nem ferramentas de análise de visitas. Ele guarda
-          no seu navegador só o e-mail que você cadastrou na lista de espera, para mostrar que você
-          já está nela, e se a animação de abertura já foi mostrada.
-        </p>
-
-        <h2>Mudanças nesta política</h2>
-        <p>
-          Quando mudarmos algo importante, avisamos no app e pedimos um novo aceite. A data no alto
-          desta página mostra a versão em vigor.
-        </p>
       </div>
     </main>
 
     <footer class="footer">
-      <div class="wrap footer-grid">
-        <div class="footer-brand">
-          <a class="brand" href="../" aria-label="Rentable, página inicial">
-            <img src="../assets/logo-casa-bordo.png" alt="" width="530" height="420" />
-            <span>rentable</span>
-          </a>
-          <p class="tagline">Organização e controle imobiliário em um só lugar.</p>
-        </div>
-        <nav class="footer-links" aria-label="Informações">
-          <a href="../privacidade/" aria-current="page">Política de privacidade</a>
-          <a href="../termos/">Termos de uso</a>
-          <a href="../suporte/">Suporte</a>
-          <a href="../excluir-conta/">Excluir conta</a>
+      <div class="wrap">
+        <a class="footer-brand" href="/" aria-label="Rentable, página inicial">
+          <img src="/assets/logo-casa-branca.png" alt="" width="530" height="420" />
+          <span>rentable</span>
+        </a>
+        <p class="footer-tag">Organização e controle imobiliário em um só lugar.</p>
+        <nav class="footer-links" aria-label="Rodapé">
+          <a href="/funcionalidades/">Funcionalidades</a>
+          <a href="/duvidas/">Dúvidas</a>
+          <a href="/suporte/">Contato e suporte</a>
+          <a href="/privacidade/">Política de privacidade</a>
+          <a href="/termos/">Termos de uso</a>
+          <a href="/excluir-conta/">Excluir conta</a>
         </nav>
         <p class="footer-legal">
-          <a href="mailto:contato@rentable.com.br">contato@rentable.com.br</a><br />
-          © 2026 Rentable
+          <a href="mailto:contato@rentable.com.br">contato@rentable.com.br</a><br />© 2026 Rentable
         </p>
       </div>
     </footer>

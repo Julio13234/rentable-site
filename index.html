@@ -8,24 +8,24 @@
       name="description"
       content="O Rentable mostra quem pagou o aluguel, calcula multa e juros de quem atrasou, lê o contrato com IA e avisa antes do reajuste. Grátis para 1 imóvel alugado."
     />
-    <meta name="theme-color" content="#7A1F2E" />
+    <meta name="theme-color" content="#4F1019" />
     <link rel="canonical" href="https://rentable.com.br/" />
-    <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon.png" />
-    <link rel="apple-touch-icon" href="assets/icone-512.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon.png" />
+    <link rel="apple-touch-icon" href="/assets/icone-512.png" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content="Rentable" />
     <meta property="og:title" content="Rentable: aluguel em dia, sem planilha" />
     <meta
       property="og:description"
-      content="Quem pagou, quem atrasou e quanto falta, num app. Multa e juros calculados, contrato lido por IA e aviso antes do reajuste."
+      content="O Rentable mostra quem pagou o aluguel, calcula multa e juros de quem atrasou, lê o contrato com IA e avisa antes do reajuste. Grátis para 1 imóvel alugado."
     />
     <meta property="og:url" content="https://rentable.com.br/" />
     <meta property="og:image" content="https://rentable.com.br/assets/og.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <script>
-      // Antes de pintar: com "reduzir movimento" não há animação; a abertura aparece uma vez por visita.
-      (function (d) {
+      // Antes de pintar: com "reduzir movimento" não há animação; a abertura aparece uma vez por visita, só no início.
+      (function (d, home) {
         var h = d.documentElement;
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var seen = false;
@@ -33,202 +33,277 @@
           seen = sessionStorage.getItem('rentable.abertura') === '1';
         } catch (e) {}
         h.className += reduce ? ' reduce' : ' motion';
-        if (reduce || seen) h.className += ' no-intro';
-        // Se o script do site não carregar, mostra tudo sem animação.
+        if (reduce || seen || !home) h.className += ' no-intro';
         setTimeout(function () {
           if (!window.__rentableReady) h.className = h.className.replace(' motion', ' reduce');
         }, 4000);
-      })(document);
+      })(document, true);
     </script>
     <link
       rel="preload"
-      href="assets/fontes/bakbak-one-latin.woff2"
+      href="/assets/fontes/bakbak-one-latin.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
     <link
       rel="preload"
-      href="assets/fontes/akatab-400-latin.woff2"
+      href="/assets/fontes/akatab-400-latin.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="css/site.css" />
-    <link rel="preload" as="image" href="assets/telas/painel.webp" type="image/webp" />
-    <script src="js/vendor/lenis.min.js" defer></script>
-    <script src="js/site.js" defer></script>
+    <link rel="stylesheet" href="/css/site.css" />
+    <script src="/js/vendor/lenis.min.js" defer></script>
+    <script src="/js/site.js" defer></script>
   </head>
-  <body>
+  <body class="page-inicio">
     <a class="skip" href="#conteudo">Pular para o conteúdo</a>
-
+    <div class="sky" aria-hidden="true"></div>
+    <canvas class="stars" aria-hidden="true" data-stars></canvas>
+    <div class="cursor-glow" aria-hidden="true" data-cursor></div>
     <!-- Abertura: a logo sobre o bordô, como no app (uma vez por visita). -->
     <div class="intro" aria-hidden="true">
       <div class="intro-mark">
-        <img src="assets/logo-casa-branca.png" alt="" width="530" height="420" />
+        <img src="/assets/logo-casa-branca.png" alt="" width="530" height="420" />
         <span class="intro-word">rentable</span>
       </div>
     </div>
 
-    <header class="topbar" data-topbar>
-      <div class="wrap topbar-row">
-        <a class="brand" href="#topo" aria-label="Rentable, início da página">
-          <img src="assets/logo-casa-bordo.png" alt="" width="530" height="420" />
+    <header class="nav" data-nav>
+      <div class="nav-inner">
+        <a class="nav-brand" href="/" aria-label="Rentable, página inicial">
+          <img src="/assets/logo-casa-branca.png" alt="" width="530" height="420" />
           <span>rentable</span>
         </a>
-        <nav class="nav" aria-label="Seções">
-          <a href="#funcionalidades" data-spy="funcionalidades">Funcionalidades</a>
-          <a href="#vantagens" data-spy="vantagens">Vantagens</a>
-          <a href="#depoimentos" data-spy="depoimentos">Depoimentos</a>
-          <a href="#duvidas" data-spy="duvidas">Dúvidas</a>
+        <nav class="nav-pills" aria-label="Páginas">
+          <a class="pill-link" href="/" aria-current="page"
+            ><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" /></svg
+            >Início</a
+          >
+          <a class="pill-link" href="/funcionalidades/"
+            ><svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="3" width="7" height="7" rx="1.5" />
+              <rect x="14" y="3" width="7" height="7" rx="1.5" />
+              <rect x="3" y="14" width="7" height="7" rx="1.5" />
+              <rect x="14" y="14" width="7" height="7" rx="1.5" /></svg
+            >Funcionalidades</a
+          >
+          <a class="pill-link" href="/duvidas/"
+            ><svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6" />
+              <path d="M12 17.5h.01" /></svg
+            >Dúvidas</a
+          >
+          <a class="pill-link" href="/suporte/"
+            ><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg
+            >Contato</a
+          >
         </nav>
-        <a class="pill pill-solid pill-small magnetic" href="#baixar" data-open-waitlist
-          >Baixar o app</a
+        <a class="nav-cta magnetic" href="/#baixar" data-open-waitlist>Baixar o app</a>
+        <button
+          class="nav-menu"
+          type="button"
+          aria-expanded="false"
+          aria-controls="menu"
+          data-menu-toggle
         >
+          <i aria-hidden="true"></i><span>Menu</span>
+        </button>
       </div>
-      <span class="progress" aria-hidden="true"></span>
     </header>
+    <nav class="menu-sheet" id="menu" aria-label="Páginas" data-menu>
+      <a href="/" aria-current="page">Início</a>
+      <a href="/funcionalidades/">Funcionalidades</a>
+      <a href="/duvidas/">Dúvidas</a>
+      <a href="/suporte/">Contato</a>
+      <a href="/#baixar" data-open-waitlist>Baixar o app</a>
+    </nav>
 
     <main id="conteudo">
-      <!-- Abertura: o título entra linha a linha, o celular sobe, os avisos chegam. -->
-      <section class="hero" id="topo">
-        <div class="wrap hero-grid">
-          <div class="hero-copy">
-            <h1 class="hero-title">
-              <span class="line"><span>Aluguel em dia.</span></span>
-              <span class="line"><span>Sem planilha.</span></span>
+      <!-- Abertura imersiva: feixe de luz, névoa, logo grande e os celulares atrás. -->
+      <section class="hero" id="topo" data-hero>
+        <div class="beam" aria-hidden="true"></div>
+        <div class="beam-core" aria-hidden="true"></div>
+        <div class="mist" aria-hidden="true">
+          <svg class="m1" viewBox="0 0 1200 200" preserveAspectRatio="none">
+            <path d="M0 120 C 200 40, 380 180, 600 110 S 980 30, 1200 100" stroke-width="40" />
+          </svg>
+          <svg class="m2" viewBox="0 0 1200 200" preserveAspectRatio="none">
+            <path d="M0 80 C 260 160, 420 20, 640 90 S 1000 170, 1200 70" stroke-width="56" />
+          </svg>
+          <svg class="m3" viewBox="0 0 1200 200" preserveAspectRatio="none">
+            <path d="M0 130 C 240 70, 520 170, 760 100 S 1060 60, 1200 120" stroke-width="70" />
+          </svg>
+        </div>
+        <div class="wrap hero-inner" data-hero-visual>
+          <div class="hero-phones" aria-hidden="true">
+            <figure class="phone ph-left">
+              <div class="phone-screen">
+                <div class="status" aria-hidden="true">
+                  <span class="status-time">9:41</span>
+                  <span class="island"></span>
+                  <span class="status-icons">
+                    <svg viewBox="0 0 18 12">
+                      <path d="M1 9h2v3H1zM5 7h2v5H5zM9 4h2v8H9zM13 1h2v11h-2z" />
+                    </svg>
+                    <svg viewBox="0 0 16 12">
+                      <path
+                        d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0zM3.5 6.9a6.4 6.4 0 0 1 9 0l-1.4 1.4a4.4 4.4 0 0 0-6.2 0zM1 4.4a9.9 9.9 0 0 1 14 0l-1.4 1.4a7.9 7.9 0 0 0-11.2 0z"
+                      />
+                    </svg>
+                    <svg viewBox="0 0 27 12">
+                      <rect
+                        x=".5"
+                        y=".5"
+                        width="22"
+                        height="11"
+                        rx="3"
+                        fill="none"
+                        stroke="currentColor"
+                        opacity=".45"
+                      />
+                      <rect x="2" y="2" width="16" height="8" rx="1.6" />
+                      <path d="M24.5 4v4a2 2 0 0 0 0-4z" opacity=".45" />
+                    </svg>
+                  </span>
+                </div>
+                <div class="layers">
+                  <figure class="layer is-active">
+                    <div class="shot">
+                      <img src="/assets/telas/painel.webp" width="390" height="800" alt="" />
+                    </div>
+                  </figure>
+                </div>
+              </div>
+            </figure>
+            <figure class="phone ph-right">
+              <div class="phone-screen">
+                <div class="layers">
+                  <figure class="layer is-active">
+                    <div class="shot">
+                      <img
+                        src="/assets/telas/casa-estatisticas.webp"
+                        width="390"
+                        height="800"
+                        alt=""
+                      />
+                    </div>
+                  </figure>
+                </div>
+              </div>
+            </figure>
+          </div>
+          <span class="badge"><i></i>Lista de espera aberta</span>
+          <div class="lockup">
+            <img
+              class="lockup-mark"
+              src="/assets/logo-casa-branca.png"
+              alt=""
+              width="530"
+              height="420"
+            />
+            <h1 class="lockup-word" aria-label="Rentable">
+              <span style="--i: 0" aria-hidden="true">r</span
+              ><span style="--i: 1" aria-hidden="true">e</span
+              ><span style="--i: 2" aria-hidden="true">n</span
+              ><span style="--i: 3" aria-hidden="true">t</span
+              ><span style="--i: 4" aria-hidden="true">a</span
+              ><span style="--i: 5" aria-hidden="true">b</span
+              ><span style="--i: 6" aria-hidden="true">l</span
+              ><span style="--i: 7" aria-hidden="true">e</span>
             </h1>
-            <p class="lede">
-              O Rentable mostra quem pagou, calcula a multa de quem atrasou e avisa antes do
-              reajuste. Para quem aluga um imóvel ou cinquenta.
-            </p>
+            <span class="lockup-sub">Gestão de aluguéis</span>
+          </div>
+          <div class="hero-card">
+            <h2>Baixe o Rentable</h2>
             <div class="stores">
               <button class="store magnetic" type="button" data-store="android">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path
                     d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z"
-                  />
-                </svg>
-                <span><small>Em breve no</small>Google Play</span>
+                  /></svg
+                ><span><small>Em breve no</small>Google Play</span>
               </button>
               <button class="store magnetic" type="button" data-store="ios">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path
                     d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
-                  />
-                </svg>
-                <span><small>Em breve na</small>App Store</span>
+                  /></svg
+                ><span><small>Em breve na</small>App Store</span>
               </button>
             </div>
-            <p class="fine">Grátis para 1 imóvel alugado. Chega às lojas no início de 2027.</p>
-          </div>
-
-          <div class="hero-visual" data-hero-visual>
-            <div class="hero-mark" aria-hidden="true"></div>
-            <div class="hero-tilt" data-tilt>
-              <div class="hero-bob">
-                <div class="phone phone-hero">
-                  <div class="phone-screen">
-                    <div class="status" aria-hidden="true">
-                      <span class="status-time">9:41</span>
-                      <span class="island"></span>
-                      <span class="status-icons">
-                        <svg viewBox="0 0 18 12">
-                          <path d="M1 9h2v3H1zM5 7h2v5H5zM9 4h2v8H9zM13 1h2v11h-2z" />
-                        </svg>
-                        <svg viewBox="0 0 16 12">
-                          <path
-                            d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0zM3.5 6.9a6.4 6.4 0 0 1 9 0l-1.4 1.4a4.4 4.4 0 0 0-6.2 0zM1 4.4a9.9 9.9 0 0 1 14 0l-1.4 1.4a7.9 7.9 0 0 0-11.2 0z"
-                          />
-                        </svg>
-                        <svg viewBox="0 0 27 12">
-                          <rect
-                            x=".5"
-                            y=".5"
-                            width="22"
-                            height="11"
-                            rx="3"
-                            fill="none"
-                            stroke="currentColor"
-                            opacity=".45"
-                          />
-                          <rect x="2" y="2" width="16" height="8" rx="1.6" />
-                          <path d="M24.5 4v4a2 2 0 0 0 0-4z" opacity=".45" />
-                        </svg>
-                      </span>
-                    </div>
-                    <div class="layers">
-                      <figure class="layer is-active">
-                        <div class="shot">
-                          <img
-                            src="assets/telas/painel.webp"
-                            width="390"
-                            height="800"
-                            alt="Tela inicial do Rentable: recebido este mês R$ 5.000,00, falta receber R$ 4.300,00, 5 inquilinos e 6 imóveis."
-                          />
-                        </div>
-                      </figure>
-                    </div>
-                    <div class="push" data-push aria-hidden="true">
-                      <img src="assets/icone-512.png" alt="" width="512" height="512" />
-                      <div class="push-text">
-                        <p class="push-head"><b>Rentable</b><span>agora</span></p>
-                        <p class="push-title" data-push-title>Pagamento recebido: Barracão</p>
-                        <p class="push-body" data-push-body>Oficina Rocha ME pagou R$ 3.500,00.</p>
-                      </div>
-                    </div>
-                  </div>
+            <div class="divider"></div>
+            <p class="or-line">
+              Ainda não chegou às lojas. Deixe seu e-mail e seja avisado no dia:
+            </p>
+            <div class="inline-wrap" data-inline-wrap>
+              <form class="inline-form" data-inline-waitlist novalidate>
+                <label class="visually-hidden" for="hero-email">Seu e-mail</label>
+                <input
+                  id="hero-email"
+                  type="email"
+                  name="email"
+                  placeholder="Seu melhor e-mail"
+                  autocomplete="email"
+                  inputmode="email"
+                  maxlength="254"
+                  required
+                />
+                <div class="hp" aria-hidden="true">
+                  <input type="text" name="empresa" tabindex="-1" autocomplete="off" />
                 </div>
-              </div>
+                <button type="submit">
+                  <span>Entrar na lista</span><i class="spinner" aria-hidden="true"></i>
+                </button>
+              </form>
+              <p class="inline-msg" data-inline-msg aria-live="polite"></p>
+              <p class="inline-legal">
+                Usamos seu e-mail só para avisar do lançamento. Para sair da lista, escreva para
+                contato@rentable.com.br. <a href="/privacidade/#lista">Privacidade</a>.
+              </p>
             </div>
-
-            <!-- Etiquetas que flutuam em volta do celular. -->
-            <div class="float float-1" style="--depth: 26" aria-hidden="true">
-              <div class="float-inner">
-                <span class="float-icon float-good">
-                  <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
-                </span>
-                <span class="float-text"
-                  ><small>Aluguel recebido</small><b data-count="150000">R$ 1.500,00</b></span
-                >
-              </div>
+          </div>
+          <div class="float float-1" style="--depth: 26" aria-hidden="true">
+            <div class="float-inner">
+              <span class="float-icon float-good"
+                ><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg
+              ></span>
+              <span class="float-text"
+                ><small>Aluguel recebido</small><b data-count="150000">R$ 1.500,00</b></span
+              >
             </div>
-            <div class="float float-2" style="--depth: -18" aria-hidden="true">
-              <div class="float-inner">
-                <span class="float-icon">
-                  <svg viewBox="0 0 24 24">
-                    <rect x="4" y="5" width="16" height="15" rx="2.5" />
-                    <path d="M4 10h16M9 3v4M15 3v4" />
-                  </svg>
-                </span>
-                <span class="float-text"><small>Reajuste pelo IGP-M</small><b>em 28 dias</b></span>
-              </div>
-            </div>
-            <div class="float float-3" style="--depth: 34" aria-hidden="true">
-              <div class="float-inner">
-                <span class="float-icon float-warn">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M6 18L18 6" />
-                    <circle cx="7.5" cy="7.5" r="2.2" />
-                    <circle cx="16.5" cy="16.5" r="2.2" />
-                  </svg>
-                </span>
-                <span class="float-text"
-                  ><small>Multa e juros calculados</small><b data-count="22440">R$ 224,40</b></span
-                >
-              </div>
+          </div>
+          <div class="float float-2" style="--depth: -20" aria-hidden="true">
+            <div class="float-inner">
+              <span class="float-icon"
+                ><svg viewBox="0 0 24 24">
+                  <rect x="4" y="5" width="16" height="15" rx="2.5" />
+                  <path d="M4 10h16M9 3v4M15 3v4" /></svg
+              ></span>
+              <span class="float-text"><small>Reajuste pelo IGP-M</small><b>em 28 dias</b></span>
             </div>
           </div>
         </div>
-        <a class="scroll-hint" href="#problema" data-scroll-hint>
-          <span>Role para conhecer</span>
-          <i aria-hidden="true"></i>
-        </a>
+        <a class="scroll-cue" href="#manifesto"><i aria-hidden="true"></i>Role para conhecer</a>
       </section>
 
-      <!-- Problema → solução: os papéis espalhados entram no celular conforme a página rola. -->
+      <!-- A frase acende palavra por palavra conforme a rolagem. -->
+      <section class="statement" id="manifesto" data-statement aria-label="Por que o Rentable">
+        <div class="wrap">
+          <p>
+            Todo mês é a mesma coisa: conferir o extrato, cobrar quem atrasou, lembrar do reajuste.
+            <strong>O Rentable faz isso por você.</strong>
+          </p>
+        </div>
+      </section>
+
       <section class="scene" id="problema" data-scene aria-labelledby="problema-titulo">
         <div class="stage">
+          <div class="stage-glow" aria-hidden="true"></div>
           <div class="wrap stage-grid">
             <div class="stage-copy">
               <div class="copy copy-problem">
@@ -265,7 +340,7 @@
                       <figure class="layer is-active">
                         <div class="shot">
                           <img
-                            src="assets/telas/painel.webp"
+                            src="/assets/telas/painel.webp"
                             width="390"
                             height="800"
                             alt=""
@@ -275,7 +350,7 @@
                       </figure>
                     </div>
                     <div class="push push-arena">
-                      <img src="assets/icone-512.png" alt="" width="512" height="512" />
+                      <img src="/assets/icone-512.png" alt="" width="512" height="512" />
                       <div class="push-text">
                         <p class="push-head"><b>Rentable</b><span>agora</span></p>
                         <p class="push-title">Tudo num lugar só</p>
@@ -337,430 +412,319 @@
         </div>
       </section>
 
-      <!-- Passeio pelo app: o celular fica parado e as telas mudam conforme a página rola. -->
-      <section class="story" id="funcionalidades" aria-labelledby="story-titulo">
-        <div class="wrap">
-          <header class="section-head">
-            <h2 id="story-titulo" data-split>Um passeio pelo app</h2>
-            <p data-reveal>
-              Role a página: o celular mostra cada parte do Rentable, com as telas de verdade.
-            </p>
+      <!-- As telas passam para o lado conforme a página rola. -->
+      <section class="gallery" data-gallery aria-labelledby="galeria-titulo">
+        <div class="gallery-stage">
+          <header class="head wrap">
+            <h2 id="galeria-titulo" data-split>Um app. Tudo no lugar.</h2>
+            <p data-reveal>Role e veja o Rentable funcionando, com as telas de verdade.</p>
           </header>
-
-          <div class="story-grid">
-            <div class="steps">
-              <article class="step is-active" data-step="0">
+          <div class="gallery-track" data-track>
+            <article class="slide">
+              <figure class="phone">
+                <div class="phone-screen">
+                  <div class="layers">
+                    <figure class="layer is-active">
+                      <div class="shot">
+                        <img
+                          src="/assets/telas/painel.webp"
+                          width="390"
+                          height="800"
+                          alt="Painel do mês com o total recebido e o que falta receber."
+                          loading="lazy"
+                        /><span class="tap" style="--tx: 83.5%; --ty: 29.5%"></span>
+                      </div>
+                    </figure>
+                  </div>
+                </div>
+              </figure>
+              <div>
                 <h3>Painel do mês</h3>
                 <p>
                   Abra o app e veja o que entrou, o que falta receber e quem está atrasado. Sem
                   conferir o extrato nome por nome.
                 </p>
-                <figure class="phone phone-inline" data-reveal>
-                  <div class="phone-screen">
-                    <div class="layers">
-                      <figure class="layer is-active">
-                        <div class="shot">
-                          <img
-                            src="assets/telas/painel.webp"
-                            width="390"
-                            height="800"
-                            alt="Painel do mês com o total recebido e o que falta receber."
-                            loading="lazy"
-                          />
-                          <span class="tap" style="--tx: 83.5%; --ty: 29.5%"></span>
-                        </div>
-                      </figure>
-                    </div>
+                <span class="slide-tag">54% do mês já recebido</span>
+              </div>
+            </article>
+            <article class="slide">
+              <figure class="phone">
+                <div class="phone-screen">
+                  <div class="layers">
+                    <figure class="layer layer-dim is-active">
+                      <div class="shot">
+                        <img
+                          src="/assets/telas/recebi.webp"
+                          width="390"
+                          height="800"
+                          alt="Aluguel atrasou: multa de 10% e juros de 1% ao mês, total de R$ 2.424,40."
+                          loading="lazy"
+                        /><span class="tap" style="--tx: 50%; --ty: 86.3%"></span>
+                      </div>
+                    </figure>
                   </div>
-                </figure>
-              </article>
-              <article class="step" data-step="1">
+                </div>
+              </figure>
+              <div>
                 <h3>Recebi, com multa e juros</h3>
                 <p>
-                  Marque o aluguel como recebido na tela do imóvel. Se atrasou, o app calcula a
-                  multa e os juros do contrato até o dia do pagamento, e você decide se cobra.
+                  Marque o aluguel como recebido. Se atrasou, o app calcula a multa e os juros do
+                  contrato até o dia do pagamento.
                 </p>
-                <figure class="phone phone-inline" data-reveal>
-                  <div class="phone-screen">
-                    <div class="layers">
-                      <figure class="layer layer-dim is-active">
-                        <div class="shot">
-                          <img
-                            src="assets/telas/recebi.webp"
-                            width="390"
-                            height="800"
-                            alt="Aluguel atrasou: 6 dias de atraso, multa de 10% e juros de 1% ao mês, total de R$ 2.424,40."
-                            loading="lazy"
-                          />
-                          <span class="tap" style="--tx: 50%; --ty: 86.3%"></span>
-                        </div>
-                      </figure>
-                    </div>
+                <span class="slide-tag">R$ 224,40 calculados</span>
+              </div>
+            </article>
+            <article class="slide">
+              <figure class="phone">
+                <div class="phone-screen">
+                  <div class="layers">
+                    <figure class="layer is-active">
+                      <div class="shot">
+                        <img
+                          src="/assets/telas/contrato.webp"
+                          width="390"
+                          height="800"
+                          alt="Contrato lido: aluguel, vencimento, índice de reajuste e multa preenchidos."
+                          loading="lazy"
+                        /><span class="tap" style="--tx: 50%; --ty: 84.3%"></span>
+                      </div>
+                    </figure>
                   </div>
-                </figure>
-              </article>
-              <article class="step" data-step="2">
+                </div>
+              </figure>
+              <div>
                 <h3>Contrato lido pela IA</h3>
                 <p>
-                  Envie o PDF ou as fotos do contrato. A IA encontra o valor, o vencimento, o índice
-                  de reajuste e a multa, e cadastra o imóvel e o inquilino para você conferir.
+                  Envie o PDF ou as fotos do contrato e a IA cadastra o imóvel, o inquilino e o
+                  contrato para você conferir.
                 </p>
-                <p class="note">Nos planos Essencial e Pro.</p>
-                <figure class="phone phone-inline" data-reveal>
-                  <div class="phone-screen">
-                    <div class="layers">
-                      <figure class="layer is-active">
-                        <div class="shot">
-                          <img
-                            src="assets/telas/contrato.webp"
-                            width="390"
-                            height="800"
-                            alt="Contrato lido: aluguel R$ 2.350,00, vence dia 5, reajuste pelo IPCA, multa de 10% e juros de 1% ao mês."
-                            loading="lazy"
-                          />
-                          <span class="tap" style="--tx: 50%; --ty: 84.3%"></span>
-                        </div>
-                      </figure>
-                    </div>
+                <span class="slide-tag">Planos Essencial e Pro</span>
+              </div>
+            </article>
+            <article class="slide">
+              <figure class="phone">
+                <div class="phone-screen">
+                  <div class="layers">
+                    <figure class="layer is-active">
+                      <div class="shot">
+                        <img
+                          src="/assets/telas/avisos.webp"
+                          width="390"
+                          height="800"
+                          alt="Notificações de conta atrasada, reajuste e carnê-leão."
+                          loading="lazy"
+                        />
+                      </div>
+                    </figure>
                   </div>
-                </figure>
-              </article>
-              <article class="step" data-step="3">
+                </div>
+              </figure>
+              <div>
                 <h3>Avisos na hora certa</h3>
                 <p>
-                  Vencimento chegando, aluguel atrasado, reajuste do contrato e o carnê-leão do mês.
-                  O Rentable avisa no celular e por e-mail, do jeito que você escolher.
+                  Vencimento chegando, aluguel atrasado, reajuste do contrato e o carnê-leão do mês,
+                  no celular e por e-mail.
                 </p>
-                <figure class="phone phone-inline" data-reveal>
-                  <div class="phone-screen">
-                    <div class="layers">
-                      <figure class="layer is-active">
-                        <div class="shot">
-                          <img
-                            src="assets/telas/avisos.webp"
-                            width="390"
-                            height="800"
-                            alt="Notificações: conta atrasada, reajuste chegando pelo IGP-M, lembrete do carnê-leão e pagamento recebido."
-                            loading="lazy"
-                          />
-                        </div>
-                      </figure>
-                    </div>
+                <span class="slide-tag">Reajuste avisado antes</span>
+              </div>
+            </article>
+            <article class="slide">
+              <figure class="phone">
+                <div class="phone-screen">
+                  <div class="layers">
+                    <figure class="layer is-active">
+                      <div class="shot">
+                        <img
+                          src="/assets/telas/contas.webp"
+                          width="390"
+                          height="800"
+                          alt="Contas do mês: falta pagar e já pago."
+                          loading="lazy"
+                        /><span class="tap" style="--tx: 77.3%; --ty: 52.6%"></span>
+                      </div>
+                    </figure>
                   </div>
-                </figure>
-              </article>
-              <article class="step" data-step="4">
+                </div>
+              </figure>
+              <div>
                 <h3>Contas do mês</h3>
                 <p>
-                  IPTU, condomínio, a luz do apartamento vago. As contas que se repetem entram
-                  sozinhas todo mês, e você marca o que pagou com um toque.
+                  IPTU, condomínio e a luz do apartamento vago entram sozinhas todo mês. Marque o
+                  que pagou com um toque.
                 </p>
-                <figure class="phone phone-inline" data-reveal>
-                  <div class="phone-screen">
-                    <div class="layers">
-                      <figure class="layer is-active">
-                        <div class="shot">
-                          <img
-                            src="assets/telas/contas.webp"
-                            width="390"
-                            height="800"
-                            alt="Contas do mês: falta pagar R$ 162,00 com 1 atrasada, pago R$ 754,50."
-                            loading="lazy"
-                          />
-                          <span class="tap" style="--tx: 77.3%; --ty: 52.6%"></span>
-                        </div>
-                      </figure>
-                    </div>
+                <span class="slide-tag">1 conta atrasada em vermelho</span>
+              </div>
+            </article>
+            <article class="slide">
+              <figure class="phone">
+                <div class="phone-screen">
+                  <div class="layers">
+                    <figure class="layer is-active">
+                      <div class="shot">
+                        <img
+                          src="/assets/telas/casa-estatisticas.webp"
+                          width="390"
+                          height="800"
+                          alt="Minha Casa: gastos do mês por categoria."
+                          loading="lazy"
+                        /><span class="tap" style="--tx: 18.3%; --ty: 20.9%"></span>
+                      </div>
+                    </figure>
                   </div>
-                </figure>
-              </article>
-              <article class="step" data-step="5">
-                <h3>Números de cada imóvel</h3>
-                <p>
-                  Quanto cada imóvel rendeu, quanto custou e se o inquilino costuma pagar em dia,
-                  nos últimos 6 meses, em 1 ano ou no período que você escolher.
-                </p>
-                <figure class="phone phone-inline" data-reveal>
-                  <div class="phone-screen">
-                    <div class="layers">
-                      <figure class="layer is-active">
-                        <div class="shot">
-                          <img
-                            src="assets/telas/estatisticas-imovel.webp"
-                            width="390"
-                            height="800"
-                            alt="Estatísticas do imóvel: R$ 9.000,00 recebidos em 6 meses, despesas de R$ 3.530,00 e 100% dos pagamentos em dia."
-                            loading="lazy"
-                          />
-                          <span class="tap" style="--tx: 36.8%; --ty: 13%"></span>
-                        </div>
-                      </figure>
-                    </div>
-                  </div>
-                </figure>
-              </article>
-              <article class="step" data-step="6">
+                </div>
+              </figure>
+              <div>
                 <h3>E a casa onde você mora</h3>
                 <p>
-                  Na área Minha Casa, as contas de casa ficam separadas dos imóveis alugados:
-                  gastos, entradas e pendências por mês, e o que subiu desde o mês anterior.
+                  Na Minha Casa, as contas de casa ficam separadas: gastos, entradas e pendências, e
+                  o que subiu desde o mês anterior.
                 </p>
-                <figure class="phone phone-inline" data-reveal>
-                  <div class="phone-screen">
-                    <div class="layers">
-                      <figure class="layer is-active">
-                        <div class="shot">
-                          <img
-                            src="assets/telas/casa-estatisticas.webp"
-                            width="390"
-                            height="800"
-                            alt="Minha Casa: gastos de outubro por categoria, total de R$ 894."
-                            loading="lazy"
-                          />
-                          <span class="tap" style="--tx: 18.3%; --ty: 20.9%"></span>
-                        </div>
-                      </figure>
-                    </div>
-                  </div>
-                </figure>
-              </article>
-            </div>
-
-            <div class="story-side" aria-hidden="true">
-              <div class="story-sticky">
-                <div class="phone-wrap">
-                  <div class="story-tilt" data-story-tilt>
-                    <div class="phone phone-story" data-story-phone>
-                      <div class="phone-screen">
-                        <div class="status">
-                          <span class="status-time">9:41</span>
-                          <span class="island"></span>
-                          <span class="status-icons"></span>
-                        </div>
-                        <div class="layers">
-                          <figure class="layer is-active" data-for="0">
-                            <div class="shot">
-                              <img src="assets/telas/painel.webp" width="390" height="800" alt="" />
-                              <span class="tap" style="--tx: 83.5%; --ty: 29.5%"></span>
-                            </div>
-                          </figure>
-                          <figure class="layer layer-dim" data-for="1">
-                            <div class="shot">
-                              <img
-                                src="assets/telas/recebi.webp"
-                                width="390"
-                                height="800"
-                                alt=""
-                                loading="lazy"
-                              />
-                              <span class="tap" style="--tx: 50%; --ty: 86.3%"></span>
-                            </div>
-                          </figure>
-                          <figure class="layer" data-for="2" data-first>
-                            <div class="shot">
-                              <img
-                                src="assets/telas/contrato-lendo.webp"
-                                width="390"
-                                height="800"
-                                alt=""
-                                loading="lazy"
-                              />
-                            </div>
-                          </figure>
-                          <figure class="layer" data-for="2" data-then>
-                            <div class="shot">
-                              <img
-                                src="assets/telas/contrato.webp"
-                                width="390"
-                                height="800"
-                                alt=""
-                                loading="lazy"
-                              />
-                              <span class="tap" style="--tx: 50%; --ty: 84.3%"></span>
-                            </div>
-                          </figure>
-                          <figure class="layer" data-for="3">
-                            <div class="shot">
-                              <img
-                                src="assets/telas/avisos.webp"
-                                width="390"
-                                height="800"
-                                alt=""
-                                loading="lazy"
-                              />
-                            </div>
-                          </figure>
-                          <figure class="layer" data-for="4">
-                            <div class="shot">
-                              <img
-                                src="assets/telas/contas.webp"
-                                width="390"
-                                height="800"
-                                alt=""
-                                loading="lazy"
-                              />
-                              <span class="tap" style="--tx: 77.3%; --ty: 52.6%"></span>
-                            </div>
-                          </figure>
-                          <figure class="layer" data-for="5">
-                            <div class="shot">
-                              <img
-                                src="assets/telas/estatisticas-imovel.webp"
-                                width="390"
-                                height="800"
-                                alt=""
-                                loading="lazy"
-                              />
-                              <span class="tap" style="--tx: 36.8%; --ty: 13%"></span>
-                            </div>
-                          </figure>
-                          <figure class="layer" data-for="6">
-                            <div class="shot">
-                              <img
-                                src="assets/telas/casa-estatisticas.webp"
-                                width="390"
-                                height="800"
-                                alt=""
-                                loading="lazy"
-                              />
-                              <span class="tap" style="--tx: 18.3%; --ty: 20.9%"></span>
-                            </div>
-                          </figure>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="chips">
-                    <p class="chip is-active" data-for="0">54% do mês já recebido</p>
-                    <p class="chip" data-for="1">R$ 224,40 de multa e juros, já calculados</p>
-                    <p class="chip" data-for="2">Valor, vencimento, índice e multa preenchidos</p>
-                    <p class="chip" data-for="3">Reajuste avisado com antecedência</p>
-                    <p class="chip" data-for="4">1 conta atrasada, sinalizada em vermelho</p>
-                    <p class="chip" data-for="5">100% dos pagamentos em dia</p>
-                    <p class="chip" data-for="6">A luz subiu 16% desde setembro</p>
-                  </div>
-                </div>
-                <div class="rail">
-                  <span class="rail-fill" data-rail-fill></span>
-                  <ol class="dots">
-                    <li class="is-active"></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                  </ol>
-                </div>
+                <span class="slide-tag">A luz subiu 16%</span>
               </div>
-            </div>
+            </article>
+          </div>
+          <div class="gallery-progress" aria-hidden="true"><span data-gallery-bar></span></div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="funcoes-titulo">
+        <div class="wrap">
+          <header class="head">
+            <h2 id="funcoes-titulo" data-split>Feito para quem aluga imóvel</h2>
+            <p data-reveal>As funções que tiram o aluguel da planilha e colocam no seu bolso.</p>
+          </header>
+          <div class="bento">
+            <article class="tile is-wide" data-reveal style="--i: 0">
+              <h3>Recebi, com multa e juros</h3>
+              <p>
+                Um toque marca o aluguel como recebido. Atrasou? Multa e juros do contrato
+                calculados até o dia.
+              </p>
+              <div class="tile-shot" aria-hidden="true">
+                <img
+                  src="/assets/telas/recebi.webp"
+                  alt=""
+                  width="390"
+                  height="800"
+                  loading="lazy"
+                /><img
+                  src="/assets/telas/painel.webp"
+                  alt=""
+                  width="390"
+                  height="800"
+                  loading="lazy"
+                />
+              </div>
+            </article>
+            <article class="tile" data-reveal style="--i: 1">
+              <h3>Contrato lido pela IA</h3>
+              <p>Envie o contrato e confira o que a IA preencheu.</p>
+              <div class="tile-shot" aria-hidden="true">
+                <img
+                  src="/assets/telas/contrato.webp"
+                  alt=""
+                  width="390"
+                  height="800"
+                  loading="lazy"
+                />
+              </div>
+            </article>
+            <article class="tile" data-reveal style="--i: 2">
+              <h3>Avisos na hora certa</h3>
+              <p>Vencimento, atraso, reajuste e carnê-leão.</p>
+              <div class="tile-shot" aria-hidden="true">
+                <img
+                  src="/assets/telas/avisos.webp"
+                  alt=""
+                  width="390"
+                  height="800"
+                  loading="lazy"
+                />
+              </div>
+            </article>
+            <article class="tile" data-reveal style="--i: 0">
+              <h3>Contas do mês</h3>
+              <p>As que se repetem entram sozinhas.</p>
+              <div class="tile-shot" aria-hidden="true">
+                <img
+                  src="/assets/telas/contas.webp"
+                  alt=""
+                  width="390"
+                  height="800"
+                  loading="lazy"
+                />
+              </div>
+            </article>
+            <article class="tile" data-reveal style="--i: 1">
+              <h3>Números de cada imóvel</h3>
+              <p>Quanto rendeu, quanto custou e quem paga em dia.</p>
+              <div class="tile-shot" aria-hidden="true">
+                <img
+                  src="/assets/telas/estatisticas-imovel.webp"
+                  alt=""
+                  width="390"
+                  height="800"
+                  loading="lazy"
+                />
+              </div>
+            </article>
+            <article class="tile" data-reveal style="--i: 2">
+              <h3>Minha Casa</h3>
+              <p>As contas de onde você mora, separadas.</p>
+              <div class="tile-shot" aria-hidden="true">
+                <img
+                  src="/assets/telas/casa-estatisticas.webp"
+                  alt=""
+                  width="390"
+                  height="800"
+                  loading="lazy"
+                />
+              </div>
+            </article>
+          </div>
+          <div class="more-link">
+            <a class="btn-white magnetic" href="/funcionalidades/">Ver todas as funcionalidades</a>
           </div>
         </div>
       </section>
 
-      <!-- Antes e depois, tarefa por tarefa. -->
-      <section class="compare" id="vantagens" aria-labelledby="compare-titulo">
-        <div class="wrap">
-          <header class="section-head">
-            <h2 id="compare-titulo" data-split>O que muda no seu mês</h2>
-            <p data-reveal>As mesmas tarefas de sempre, com o app fazendo a parte chata.</p>
-          </header>
-          <table class="compare-table">
-            <thead>
-              <tr>
-                <th scope="col"><span class="visually-hidden">Tarefa</span></th>
-                <th scope="col">Sem o Rentable</th>
-                <th scope="col">Com o Rentable</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">Saber quem pagou</th>
-                <td data-label="Sem o Rentable">
-                  <span class="was">Abrir o extrato e conferir nome por nome.</span>
-                </td>
-                <td data-label="Com o Rentable">
-                  O painel mostra o recebido, o que falta e quem atrasou.
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">Cobrar um atraso</th>
-                <td data-label="Sem o Rentable">
-                  <span class="was">Multa e juros na calculadora, com o contrato do lado.</span>
-                </td>
-                <td data-label="Com o Rentable">
-                  Um toque em Recebi, com multa e juros do contrato até o dia.
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">Reajuste anual</th>
-                <td data-label="Sem o Rentable">
-                  <span class="was">Lembrar a data e descobrir qual índice usar.</span>
-                </td>
-                <td data-label="Com o Rentable">
-                  Aviso antes da data, com o índice que está no contrato.
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">Contrato novo</th>
-                <td data-label="Sem o Rentable">
-                  <span class="was">Digitar valor, datas, índice e multa, campo por campo.</span>
-                </td>
-                <td data-label="Com o Rentable">
-                  Enviar o PDF ou as fotos e conferir o que a IA preencheu.
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">Contas do imóvel</th>
-                <td data-label="Sem o Rentable">
-                  <span class="was">Boletos soltos no e-mail e no aplicativo do banco.</span>
-                </td>
-                <td data-label="Com o Rentable">
-                  IPTU, condomínio e luz no imóvel certo, com aviso de vencimento.
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">Carnê-leão</th>
-                <td data-label="Sem o Rentable">
-                  <span class="was">Lembrar sozinho, todo mês, de gerar o DARF.</span>
-                </td>
-                <td data-label="Com o Rentable">Lembrete mensal com o mês que precisa ser pago.</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <ul class="perks">
-            <li data-reveal style="--i: 0">
-              <h3>Começa grátis</h3>
-              <p>1 imóvel alugado e 1 onde você mora, sem cartão de crédito.</p>
-            </li>
-            <li data-reveal style="--i: 1">
-              <h3>Cresce com você</h3>
-              <p>Do primeiro imóvel até 50, nos planos Essencial e Pro.</p>
-            </li>
-            <li data-reveal style="--i: 2">
-              <h3>Seus dados, só seus</h3>
-              <p>
-                Cada conta vê apenas os próprios dados. Entrada com Face ID ou digital, e você
-                exclui a conta quando quiser.
-              </p>
-            </li>
-            <li data-reveal style="--i: 3">
-              <h3>Feito para o aluguel no Brasil</h3>
-              <p>
-                IGP-M, IPCA, INPC e IVAR, multa e juros de mora, carnê-leão: o app fala a língua do
-                contrato brasileiro.
-              </p>
-            </li>
-          </ul>
+      <section class="marquee" aria-label="Vantagens do Rentable">
+        <div class="marquee-row">
+          <span class="marquee-chip is-solid">Recebi em um toque</span
+          ><span class="marquee-chip">Multa e juros ao dia</span
+          ><span class="marquee-chip">IGP-M, IPCA, INPC e IVAR</span
+          ><span class="marquee-chip is-solid">Contrato lido por IA</span
+          ><span class="marquee-chip">Aviso antes do reajuste</span
+          ><span class="marquee-chip">Lembrete do carnê-leão</span
+          ><span class="visually-hidden">.</span
+          ><span class="marquee-chip is-solid" aria-hidden="true">Recebi em um toque</span
+          ><span class="marquee-chip" aria-hidden="true">Multa e juros ao dia</span
+          ><span class="marquee-chip" aria-hidden="true">IGP-M, IPCA, INPC e IVAR</span
+          ><span class="marquee-chip is-solid" aria-hidden="true">Contrato lido por IA</span
+          ><span class="marquee-chip" aria-hidden="true">Aviso antes do reajuste</span
+          ><span class="marquee-chip" aria-hidden="true">Lembrete do carnê-leão</span>
+        </div>
+        <div class="marquee-row is-reverse">
+          <span class="marquee-chip is-solid">Contas que se repetem</span
+          ><span class="marquee-chip">Minha Casa separada</span
+          ><span class="marquee-chip is-solid">Entrada com Face ID</span
+          ><span class="marquee-chip">Grátis para 1 imóvel</span
+          ><span class="marquee-chip is-solid">Até 50 imóveis no Pro</span
+          ><span class="marquee-chip">Seus dados, só seus</span
+          ><span class="visually-hidden">.</span
+          ><span class="marquee-chip is-solid" aria-hidden="true">Contas que se repetem</span
+          ><span class="marquee-chip" aria-hidden="true">Minha Casa separada</span
+          ><span class="marquee-chip is-solid" aria-hidden="true">Entrada com Face ID</span
+          ><span class="marquee-chip" aria-hidden="true">Grátis para 1 imóvel</span
+          ><span class="marquee-chip is-solid" aria-hidden="true">Até 50 imóveis no Pro</span
+          ><span class="marquee-chip" aria-hidden="true">Seus dados, só seus</span>
         </div>
       </section>
 
-      <!-- Depoimentos (ilustrativos até o lançamento). -->
-      <section class="voices" id="depoimentos" aria-labelledby="voices-titulo">
+      <section class="section" aria-labelledby="historias-titulo">
         <div class="wrap">
-          <header class="section-head">
-            <h2 id="voices-titulo" data-split>Como o Rentable entra na rotina</h2>
+          <header class="head">
+            <h2 id="historias-titulo" data-split>Como o Rentable entra na rotina</h2>
             <p class="disclaimer" data-reveal>
               Histórias ilustrativas, montadas a partir de situações comuns de quem aluga imóvel. Os
               depoimentos de quem usar o app entram aqui depois do lançamento.
@@ -774,8 +738,8 @@
                 já com o índice certo na mão.
               </blockquote>
               <figcaption>
-                <span class="avatar" aria-hidden="true">M</span>
-                <span><b>Marta</b>aposentada, 3 apartamentos em Campinas (SP)</span>
+                <span class="avatar" aria-hidden="true">M</span
+                ><span><b>Marta</b>aposentada, 3 apartamentos em Campinas (SP)</span>
               </figcaption>
             </figure>
             <figure class="quote" data-reveal style="--i: 1">
@@ -785,8 +749,8 @@
                 abrir a calculadora.
               </blockquote>
               <figcaption>
-                <span class="avatar" aria-hidden="true">R</span>
-                <span><b>Rafael</b>engenheiro, 2 imóveis em Belo Horizonte (MG)</span>
+                <span class="avatar" aria-hidden="true">R</span
+                ><span><b>Rafael</b>engenheiro, 2 imóveis em Belo Horizonte (MG)</span>
               </figcaption>
             </figure>
             <figure class="quote" data-reveal style="--i: 0">
@@ -796,8 +760,8 @@
                 10%, e eu só conferi.
               </blockquote>
               <figcaption>
-                <span class="avatar" aria-hidden="true">J</span>
-                <span><b>Juliana</b>professora, 1 casa em Curitiba (PR)</span>
+                <span class="avatar" aria-hidden="true">J</span
+                ><span><b>Juliana</b>professora, 1 casa em Curitiba (PR)</span>
               </figcaption>
             </figure>
             <figure class="quote" data-reveal style="--i: 1">
@@ -806,76 +770,20 @@
                 que a luz tinha subido 16% e descobri que era o chuveiro novo.
               </blockquote>
               <figcaption>
-                <span class="avatar" aria-hidden="true">B</span>
-                <span><b>Bruno</b>designer, mora de aluguel em Recife (PE)</span>
+                <span class="avatar" aria-hidden="true">B</span
+                ><span><b>Bruno</b>designer, mora de aluguel em Recife (PE)</span>
               </figcaption>
             </figure>
           </div>
         </div>
       </section>
 
-      <section class="faq" id="duvidas" aria-labelledby="faq-titulo">
-        <div class="wrap faq-grid">
-          <h2 id="faq-titulo" data-split>Dúvidas</h2>
-          <div class="faq-list">
-            <details data-reveal style="--i: 0">
-              <summary>Quando posso baixar?</summary>
-              <div class="answer">
-                <p>
-                  O Rentable está na fase final de testes e chega ao Google Play e à App Store no
-                  início de 2027. Deixe seu e-mail em
-                  <a href="#baixar" data-open-waitlist>Baixar o app</a>
-                  e avisamos no dia.
-                </p>
-              </div>
-            </details>
-            <details data-reveal style="--i: 1">
-              <summary>Quanto custa?</summary>
-              <div class="answer">
-                <p>
-                  O plano Grátis cobre 1 imóvel alugado e 1 onde você mora. Para mais imóveis e para
-                  a leitura de contrato por IA, há os planos Essencial e Pro, com assinatura mensal
-                  ou anual que você cancela quando quiser.
-                </p>
-              </div>
-            </details>
-            <details data-reveal style="--i: 2">
-              <summary>O app recebe o aluguel por mim?</summary>
-              <div class="answer">
-                <p>
-                  Ainda não. Você recebe como já recebe hoje e marca no app com um toque. A cobrança
-                  por Pix direto pelo app está a caminho.
-                </p>
-              </div>
-            </details>
-            <details data-reveal style="--i: 3">
-              <summary>Meus dados ficam seguros?</summary>
-              <div class="answer">
-                <p>
-                  A conexão é criptografada, cada conta só acessa os próprios dados e você pode
-                  excluir a conta e tudo o que cadastrou a qualquer momento. Os detalhes estão na
-                  <a href="privacidade/">Política de privacidade</a>.
-                </p>
-              </div>
-            </details>
-            <details data-reveal style="--i: 4">
-              <summary>Serve para quem mora de aluguel?</summary>
-              <div class="answer">
-                <p>
-                  Serve. Na área Minha Casa você organiza as contas da casa onde mora e acompanha
-                  gastos, entradas e pendências mês a mês.
-                </p>
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
-
       <section class="final" id="baixar" aria-labelledby="final-titulo" data-glow>
+        <div class="beam" aria-hidden="true"></div>
         <div class="wrap final-inner">
           <img
             class="final-mark"
-            src="assets/logo-casa-branca.png"
+            src="/assets/logo-casa-branca.png"
             alt=""
             width="530"
             height="420"
@@ -883,146 +791,78 @@
           />
           <h2 id="final-titulo" data-split>Comece pelo próximo vencimento.</h2>
           <p data-reveal>
-            O Rentable chega às lojas no início de 2027. Deixe seu e-mail e seja avisado no dia.
+            O Rentable chega às lojas no início de 2027. Baixe quando sair ou entre na lista e seja
+            avisado no dia.
           </p>
-          <div class="stores" data-reveal style="--i: 1">
-            <button class="store store-light magnetic" type="button" data-store="android">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z"
+          <div data-reveal style="--i: 1">
+            <div class="stores">
+              <button class="store magnetic" type="button" data-store="android">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z"
+                  /></svg
+                ><span><small>Em breve no</small>Google Play</span>
+              </button>
+              <button class="store magnetic" type="button" data-store="ios">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
+                  /></svg
+                ><span><small>Em breve na</small>App Store</span>
+              </button>
+            </div>
+          </div>
+          <div class="inline-wrap-holder" data-reveal style="--i: 2">
+            <div class="inline-wrap" data-inline-wrap>
+              <form class="inline-form" data-inline-waitlist novalidate>
+                <label class="visually-hidden" for="final-email">Seu e-mail</label>
+                <input
+                  id="final-email"
+                  type="email"
+                  name="email"
+                  placeholder="Seu melhor e-mail"
+                  autocomplete="email"
+                  inputmode="email"
+                  maxlength="254"
+                  required
                 />
-              </svg>
-              <span><small>Em breve no</small>Google Play</span>
-            </button>
-            <button class="store store-light magnetic" type="button" data-store="ios">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
-                />
-              </svg>
-              <span><small>Em breve na</small>App Store</span>
-            </button>
+                <div class="hp" aria-hidden="true">
+                  <input type="text" name="empresa" tabindex="-1" autocomplete="off" />
+                </div>
+                <button type="submit">
+                  <span>Entrar na lista</span><i class="spinner" aria-hidden="true"></i>
+                </button>
+              </form>
+              <p class="inline-msg" data-inline-msg aria-live="polite"></p>
+              <p class="inline-legal">
+                Usamos seu e-mail só para avisar do lançamento. Para sair da lista, escreva para
+                contato@rentable.com.br. <a href="/privacidade/#lista">Privacidade</a>.
+              </p>
+            </div>
           </div>
         </div>
       </section>
     </main>
 
     <footer class="footer">
-      <div class="wrap footer-grid">
-        <div class="footer-brand">
-          <a class="brand" href="#topo" aria-label="Rentable, voltar ao início">
-            <img src="assets/logo-casa-bordo.png" alt="" width="530" height="420" />
-            <span>rentable</span>
-          </a>
-          <p class="tagline">Organização e controle imobiliário em um só lugar.</p>
-        </div>
-        <nav class="footer-links" aria-label="Informações">
-          <a href="privacidade/">Política de privacidade</a>
-          <a href="termos/">Termos de uso</a>
-          <a href="suporte/">Suporte</a>
-          <a href="excluir-conta/">Excluir conta</a>
+      <div class="wrap">
+        <a class="footer-brand" href="/" aria-label="Rentable, página inicial">
+          <img src="/assets/logo-casa-branca.png" alt="" width="530" height="420" />
+          <span>rentable</span>
+        </a>
+        <p class="footer-tag">Organização e controle imobiliário em um só lugar.</p>
+        <nav class="footer-links" aria-label="Rodapé">
+          <a href="/funcionalidades/">Funcionalidades</a>
+          <a href="/duvidas/">Dúvidas</a>
+          <a href="/suporte/">Contato e suporte</a>
+          <a href="/privacidade/">Política de privacidade</a>
+          <a href="/termos/">Termos de uso</a>
+          <a href="/excluir-conta/">Excluir conta</a>
         </nav>
         <p class="footer-legal">
-          <a href="mailto:contato@rentable.com.br">contato@rentable.com.br</a><br />
-          © 2026 Rentable
+          <a href="mailto:contato@rentable.com.br">contato@rentable.com.br</a><br />© 2026 Rentable
         </p>
       </div>
     </footer>
-
-    <!-- Lista de espera: aparece ao tocar em baixar o app. -->
-    <dialog class="waitlist" aria-labelledby="lista-titulo" data-waitlist>
-      <div class="waitlist-card">
-        <button class="waitlist-close" type="button" aria-label="Fechar" data-waitlist-close>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
-        </button>
-
-        <form class="waitlist-step" data-waitlist-form novalidate>
-          <div class="waitlist-icon" aria-hidden="true">
-            <img src="assets/icone-512.png" alt="" width="512" height="512" />
-            <span class="waitlist-badge" data-badge="android">
-              <svg viewBox="0 0 24 24">
-                <path
-                  d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z"
-                />
-              </svg>
-            </span>
-            <span class="waitlist-badge" data-badge="ios">
-              <svg viewBox="0 0 24 24">
-                <path
-                  d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
-                />
-              </svg>
-            </span>
-          </div>
-          <h2 id="lista-titulo" data-waitlist-title>O Rentable chega no início de 2027</h2>
-          <p class="waitlist-lede">
-            Deixe seu e-mail e avisamos assim que o app estiver disponível para baixar. É grátis
-            para 1 imóvel alugado.
-          </p>
-
-          <fieldset class="waitlist-platforms">
-            <legend>Onde você vai usar</legend>
-            <label>
-              <input type="radio" name="plataforma" value="android" checked />
-              <span>Android</span>
-            </label>
-            <label>
-              <input type="radio" name="plataforma" value="ios" />
-              <span>iPhone</span>
-            </label>
-          </fieldset>
-
-          <label class="waitlist-field">
-            <span>Seu e-mail</span>
-            <input
-              type="email"
-              name="email"
-              autocomplete="email"
-              inputmode="email"
-              placeholder="nome@exemplo.com"
-              required
-              maxlength="254"
-              aria-describedby="lista-erro"
-            />
-          </label>
-          <p class="waitlist-error" id="lista-erro" data-waitlist-error aria-live="polite"></p>
-
-          <label class="waitlist-check">
-            <input type="checkbox" name="novidades" />
-            <span>Quero receber também dicas e novidades do Rentable.</span>
-          </label>
-
-          <div class="hp" aria-hidden="true">
-            <label
-              >Empresa <input type="text" name="empresa" tabindex="-1" autocomplete="off"
-            /></label>
-          </div>
-
-          <button class="pill pill-solid waitlist-submit" type="submit" data-waitlist-submit>
-            <span>Me avise no lançamento</span>
-            <i class="spinner" aria-hidden="true"></i>
-          </button>
-          <p class="waitlist-legal">
-            Usamos seu e-mail só para avisar do lançamento (e para as novidades, se você marcar).
-            Para sair da lista, escreva para contato@rentable.com.br. Veja a
-            <a href="privacidade/#lista">Política de privacidade</a>.
-          </p>
-        </form>
-
-        <div class="waitlist-step waitlist-done" data-waitlist-done hidden>
-          <div class="done-mark" aria-hidden="true">
-            <svg viewBox="0 0 64 64">
-              <circle cx="32" cy="32" r="29" />
-              <path d="M19 33l9 9 17-18" />
-            </svg>
-            <span class="burst"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-          </div>
-          <h2 tabindex="-1" data-done-title>Pronto, você está na lista!</h2>
-          <p data-done-text>Avisamos por e-mail assim que o Rentable chegar às lojas.</p>
-          <button class="pill pill-solid" type="button" data-waitlist-close>Fechar</button>
-          <button class="linklike" type="button" data-waitlist-again>Cadastrar outro e-mail</button>
-        </div>
-      </div>
-    </dialog>
   </body>
 </html>
