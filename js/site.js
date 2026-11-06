@@ -315,23 +315,168 @@
     });
   }
 
-  // ---------- Galeria que anda para o lado ----------
-  var gallery = $('[data-gallery]');
-  var track = $('[data-track]');
-  var galleryBar = $('[data-gallery-bar]');
-  var slides = track ? $$('.slide', track) : [];
-  var galleryLive = !!gallery && !reduce && window.matchMedia('(min-width: 901px)').matches;
-  var galleryDist = 0;
-  var sizeGallery = function () {
-    if (!galleryLive) return;
-    galleryDist = Math.max(0, track.scrollWidth - window.innerWidth);
-    gallery.style.height = window.innerHeight + galleryDist + 'px';
-  };
-  if (galleryLive) {
-    gallery.classList.add('is-live');
-    sizeGallery();
-    window.addEventListener('resize', sizeGallery);
-    window.addEventListener('load', sizeGallery);
+  // ---------- Carrossel das telas: setas, pontinhos, arrastar, teclado; passa sozinho ----------
+  var carousel = $('[data-carousel]');
+  if (carousel) {
+    var track = $('[data-track]', carousel);
+    var stage = $('.carousel', carousel);
+    var slides = $$('.slide', track);
+    var dotsWrap = $('[data-car-dots]', carousel);
+    var active = 0;
+    var autoTimer = null;
+    var inView = false;
+    var drag = null;
+    var settleTimer = null;
+    var aimTimer = null;
+    var aimed = -1;
+    var ticking = false;
+
+    var centerOf = function (i) {
+      var sl = slides[i];
+      return sl.offsetLeft + sl.offsetWidth / 2 - track.clientWidth / 2;
+    };
+    var dots = slides.map(function (sl, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', 'Tela ' + (i + 1) + ': ' + $('h3', sl).textContent);
+      b.addEventListener('click', function () {
+        goTo(i);
+      });
+      dotsWrap.appendChild(b);
+      return b;
+    });
+    var markActive = function (i) {
+      active = i;
+      dots.forEach(function (d, j) {
+        d.setAttribute('aria-current', j === i ? 'true' : 'false');
+      });
+    };
+    // Lê a posição: a tela mais perto do meio é a atual; as outras ficam menores e apagadas.
+    var readTrack = function () {
+      ticking = false;
+      var mid = track.scrollLeft + track.clientWidth / 2;
+      var best = 0;
+      var bestDist = Infinity;
+      slides.forEach(function (sl, i) {
+        var center = sl.offsetLeft + sl.offsetWidth / 2;
+        var dist = Math.abs(center - mid);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = i;
+        }
+        var focus = 1 - clamp(dist / (sl.offsetWidth * 1.05), 0, 1);
+        sl.style.setProperty('--focus', focus.toFixed(3));
+        sl.classList.toggle('is-focus', focus > 0.82);
+      });
+      // Enquanto anda até a tela escolhida, os pontinhos ficam nela (não piscam no caminho).
+      if (aimed < 0 && best !== active) markActive(best);
+    };
+    var scrollToSlide = function (target) {
+      aimed = target;
+      markActive(target);
+      clearTimeout(aimTimer);
+      aimTimer = setTimeout(function () {
+        aimed = -1;
+      }, 900);
+      track.scrollTo({ left: centerOf(target), behavior: reduce ? 'auto' : 'smooth' });
+    };
+    var goTo = function (i, fromAuto) {
+      var n = slides.length;
+      scrollToSlide(((i % n) + n) % n);
+      if (!fromAuto) restartAuto();
+    };
+    var stopAuto = function () {
+      clearTimeout(autoTimer);
+      autoTimer = null;
+    };
+    // Espera parada quando o mouse está em cima ou o teclado está nele (perguntado na hora,
+    // para não depender de eventos de entrar e sair).
+    var paused = function () {
+      return (finePointer && stage.matches(':hover')) || !!carousel.querySelector(':focus-visible');
+    };
+    var restartAuto = function () {
+      stopAuto();
+      if (reduce || !inView || drag || document.hidden) return;
+      autoTimer = setTimeout(function () {
+        if (!paused()) goTo(active + 1, true);
+        restartAuto();
+      }, 5500);
+    };
+
+    $('[data-car-prev]', carousel).addEventListener('click', function () {
+      goTo(active - 1);
+    });
+    $('[data-car-next]', carousel).addEventListener('click', function () {
+      goTo(active + 1);
+    });
+    track.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      goTo(active + (e.key === 'ArrowRight' ? 1 : -1));
+    });
+    track.addEventListener(
+      'scroll',
+      function () {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(readTrack);
+      },
+      { passive: true },
+    );
+
+    // Arrastar com o mouse (no toque, o próprio navegador desliza e encaixa).
+    track.addEventListener('pointerdown', function (e) {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      drag = { x: e.clientX, left: track.scrollLeft, moved: 0, from: active };
+      clearTimeout(settleTimer);
+      track.style.scrollSnapType = 'none';
+      track.classList.add('is-dragging');
+      track.setPointerCapture(e.pointerId);
+      stopAuto();
+    });
+    track.addEventListener('pointermove', function (e) {
+      if (!drag) return;
+      drag.moved = e.clientX - drag.x;
+      track.scrollLeft = drag.left - drag.moved;
+    });
+    var endDrag = function () {
+      if (!drag) return;
+      var d = drag;
+      drag = null;
+      track.classList.remove('is-dragging');
+      var target = active;
+      if (Math.abs(d.moved) > 50 && target === d.from) target = d.from + (d.moved < 0 ? 1 : -1);
+      scrollToSlide(clamp(target, 0, slides.length - 1));
+      settleTimer = setTimeout(function () {
+        track.style.scrollSnapType = '';
+      }, 650);
+      restartAuto();
+    };
+    track.addEventListener('pointerup', endDrag);
+    track.addEventListener('pointercancel', endDrag);
+    track.addEventListener('dragstart', function (e) {
+      e.preventDefault();
+    });
+
+    // Ao sair com o mouse ou o foco, conta o tempo de novo antes de passar; fora da tela, para.
+    stage.addEventListener('pointerleave', restartAuto);
+    carousel.addEventListener('focusout', restartAuto);
+    document.addEventListener('visibilitychange', restartAuto);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(
+        function (entries) {
+          inView = entries[0].isIntersecting;
+          restartAuto();
+        },
+        { threshold: 0.45 },
+      ).observe(track);
+    }
+    window.addEventListener('resize', function () {
+      track.scrollTo({ left: centerOf(active), behavior: 'auto' });
+      readTrack();
+    });
+    markActive(0);
+    readTrack();
   }
 
   // ---------- Problema → solução ----------
@@ -405,18 +550,15 @@
   // ---------- Um quadro por vez: tudo o que depende da rolagem e do mouse ----------
   var hero = $('[data-hero]');
   var heroVisual = $('[data-hero-visual]');
-  var cue = $('.scroll-cue');
   var lastFrameY = window.scrollY;
   var frame = function (time) {
     var y = window.scrollY;
     var vh = window.innerHeight;
-    var vw = window.innerWidth;
 
     // Leituras.
     var heroH = hero ? hero.offsetHeight : 1;
     var statementRect = statement ? statement.getBoundingClientRect() : null;
     var sceneRect = scene ? scene.getBoundingClientRect() : null;
-    var galleryRect = galleryLive ? gallery.getBoundingClientRect() : null;
     var storyRect = storyGrid ? storyGrid.getBoundingClientRect() : null;
     var stepRect = current >= 0 && steps[current] ? steps[current].getBoundingClientRect() : null;
 
@@ -445,7 +587,6 @@
         heroVisual.style.setProperty('--mx', smooth.x.toFixed(3));
         heroVisual.style.setProperty('--my', smooth.y.toFixed(3));
       }
-      if (cue) cue.style.pointerEvents = t > 0.1 ? 'none' : '';
     }
 
     // Manifesto: as palavras acendem conforme a frase passa pela tela.
@@ -476,22 +617,6 @@
       }
       scene.classList.toggle('is-solved', p > 0.56);
       arena.classList.toggle('is-full', p > 0.62);
-    }
-
-    // Galeria: rolar para baixo anda para o lado; a tela do meio fica em foco.
-    if (galleryRect) {
-      var gTotal = galleryRect.height - vh;
-      var gp = gTotal > 0 ? clamp(-galleryRect.top / gTotal, 0, 1) : 0;
-      var x = -gp * galleryDist;
-      track.style.transform = 'translate3d(' + x.toFixed(1) + 'px, 0, 0)';
-      if (galleryBar) galleryBar.style.setProperty('--g', gp.toFixed(4));
-      for (var i = 0; i < slides.length; i++) {
-        var sl = slides[i];
-        var center = sl.offsetLeft + x + sl.offsetWidth / 2;
-        var focus = 1 - clamp(Math.abs(center - vw / 2) / (vw * 0.55), 0, 1);
-        sl.style.setProperty('--focus', focus.toFixed(3));
-        sl.classList.toggle('is-focus', focus > 0.82);
-      }
     }
 
     // Passeio: o celular gira de leve dentro de cada trecho; a linha lateral acompanha.
@@ -624,12 +749,12 @@
       localStorage.setItem('rentable.lista', JSON.stringify(s));
     } catch (e) {}
   };
-  var submitWaitlist = function (payload) {
+  var postJson = function (url, payload, fallback) {
     var controller = 'AbortController' in window ? new AbortController() : null;
     var timer = setTimeout(function () {
       if (controller) controller.abort();
     }, 12000);
-    return fetch(WAITLIST_URL, {
+    return fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -644,16 +769,19 @@
           .then(function (body) {
             return res.ok && body && body.ok
               ? { ok: true }
-              : { ok: false, error: (body && body.error) || GENERIC_ERROR };
+              : { ok: false, error: (body && body.error) || fallback, field: body && body.field };
           });
       })
       .catch(function () {
-        return { ok: false, error: GENERIC_ERROR };
+        return { ok: false, error: fallback };
       })
       .then(function (r) {
         clearTimeout(timer);
         return r;
       });
+  };
+  var submitWaitlist = function (payload) {
+    return postJson(WAITLIST_URL, payload, GENERIC_ERROR);
   };
 
   // Formulário curto (abertura e chamada final).
@@ -720,7 +848,11 @@
     '<button class="waitlist-close" type="button" aria-label="Fechar" data-waitlist-close><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg></button>' +
     '<form class="waitlist-step" data-waitlist-form novalidate>' +
     '<div class="waitlist-icon" aria-hidden="true"><img src="/assets/icone-512.png" alt="" width="512" height="512" />' +
-    '<span class="waitlist-badge" data-badge="android"><svg viewBox="0 0 24 24"><path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z" /></svg></span>' +
+    '<span class="waitlist-badge" data-badge="android"><svg viewBox="0 0 24 24">' +
+    '<path fill="#4285F4" d="M3.6 2.2 13.4 12 3.6 21.8c-.4-.3-.6-.8-.6-1.4V3.6c0-.6.2-1.1.6-1.4z" />' +
+    '<path fill="#34A853" d="M3.6 2.2c.4-.3 1-.3 1.6 0l11.3 6.4L13.4 12z" />' +
+    '<path fill="#EA4335" d="M3.6 21.8 13.4 12l3.1 3.4-11.3 6.4c-.6.3-1.2.3-1.6 0z" />' +
+    '<path fill="#FBBC04" d="m16.5 8.6 3.6 2c1.2.7 1.2 2.1 0 2.8l-3.6 2L13.4 12z" /></svg></span>' +
     '<span class="waitlist-badge" data-badge="ios"><svg viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" /></svg></span></div>' +
     '<h2 id="lista-titulo" data-waitlist-title>O Rentable chega no início de 2027</h2>' +
     '<p class="waitlist-lede">Deixe seu e-mail e avisamos assim que o app estiver disponível para baixar. É grátis para 1 imóvel alugado.</p>' +
@@ -887,4 +1019,166 @@
       }
     });
   });
+
+  // ---------- Fale conosco: formulário que chega pronto para a equipe ----------
+  var CONTACT_URL = WAITLIST_URL.replace('/lista-de-espera', '/fale-conosco');
+  var CONTACT_ERROR =
+    'Não deu para enviar agora. Confira sua internet e tente de novo, ou escreva para contato@rentable.com.br.';
+  var contactForm = $('[data-contact-form]');
+  if (contactForm) {
+    var area = $('[data-form-area]');
+    var sent = $('[data-form-done]');
+    var sentTitle = $('[data-done-title]', sent);
+    var sentText = $('[data-done-text]', sent);
+    var formError = $('[data-form-error]', contactForm);
+    var sendButton = $('.form-submit', contactForm);
+    var counter = $('[data-char-count]', contactForm);
+    var fields = contactForm.elements;
+    var tried = false;
+
+    var digits = function (v) {
+      return v.replace(/\D/g, '');
+    };
+    var maskPhone = function (v) {
+      var d = digits(v).slice(0, 11);
+      if (!d) return '';
+      if (d.length <= 2) return '(' + d;
+      if (d.length <= 6) return '(' + d.slice(0, 2) + ') ' + d.slice(2);
+      if (d.length <= 10) return '(' + d.slice(0, 2) + ') ' + d.slice(2, 6) + '-' + d.slice(6);
+      return '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7);
+    };
+    var CHECKS = {
+      nome: function (v) {
+        return v.trim().length >= 2 ? '' : 'Digite o seu nome.';
+      },
+      email: function (v) {
+        var e = v.trim().toLowerCase();
+        return e.length <= 254 && EMAIL.test(e)
+          ? ''
+          : 'Digite um e-mail válido, como nome@exemplo.com.';
+      },
+      telefone: function (v) {
+        var n = digits(v).length;
+        return !v.trim() || n === 10 || n === 11 ? '' : 'Confira o telefone, com DDD.';
+      },
+      motivo: function (v) {
+        return v ? '' : 'Escolha o motivo do contato.';
+      },
+      mensagem: function (v) {
+        return v.trim().length >= 10 ? '' : 'Conte um pouco mais (pelo menos 10 letras).';
+      },
+    };
+    var setFieldError = function (name, msg) {
+      var box = $('[data-field="' + name + '"]', contactForm);
+      if (!box) return;
+      var input = fields[name];
+      var note = $('[data-field-msg]', box);
+      note.id = 'erro-' + name;
+      box.classList.toggle('is-invalid', !!msg);
+      note.textContent = msg || '';
+      if (msg) {
+        input.setAttribute('aria-invalid', 'true');
+        input.setAttribute('aria-describedby', note.id);
+      } else {
+        input.removeAttribute('aria-invalid');
+        input.removeAttribute('aria-describedby');
+      }
+    };
+    var check = function (name) {
+      var msg = CHECKS[name](fields[name].value);
+      setFieldError(name, msg);
+      return msg;
+    };
+    var updateCounter = function () {
+      var n = fields.mensagem.value.length;
+      counter.textContent = n + ' / 2000';
+      counter.classList.toggle('is-near', n > 1800);
+    };
+
+    fields.telefone.addEventListener('input', function () {
+      fields.telefone.value = maskPhone(fields.telefone.value);
+    });
+    fields.mensagem.addEventListener('input', updateCounter);
+    Object.keys(CHECKS).forEach(function (name) {
+      var input = fields[name];
+      input.addEventListener(name === 'motivo' ? 'change' : 'input', function () {
+        formError.textContent = '';
+        if (tried || input.getAttribute('aria-invalid')) check(name);
+      });
+      input.addEventListener('blur', function () {
+        if (input.value.trim()) check(name);
+      });
+    });
+
+    contactForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      tried = true;
+      formError.textContent = '';
+      var firstBad = null;
+      Object.keys(CHECKS).forEach(function (name) {
+        var box = $('[data-field="' + name + '"]', contactForm);
+        box.classList.remove('is-shaking');
+        if (!check(name)) return;
+        void box.offsetWidth;
+        box.classList.add('is-shaking');
+        if (!firstBad) firstBad = name;
+      });
+      if (firstBad) {
+        fields[firstBad].focus();
+        return;
+      }
+      var email = fields.email.value.trim().toLowerCase();
+      sendButton.classList.add('is-loading');
+      sendButton.disabled = true;
+      postJson(
+        CONTACT_URL,
+        {
+          nome: fields.nome.value.trim(),
+          email: email,
+          telefone: fields.telefone.value.trim(),
+          motivo: fields.motivo.value,
+          mensagem: fields.mensagem.value.trim(),
+          empresa: fields.empresa.value,
+        },
+        CONTACT_ERROR,
+      ).then(function (r) {
+        sendButton.classList.remove('is-loading');
+        sendButton.disabled = false;
+        if (r.ok) {
+          area.hidden = true;
+          sent.hidden = false;
+          sentTitle.textContent = 'Mensagem enviada!';
+          sentText.textContent =
+            'Recebemos sua mensagem e respondemos em ' +
+            email +
+            '. Confira também a caixa de spam.';
+          sentTitle.focus();
+          return;
+        }
+        if (r.field && CHECKS[r.field]) {
+          setFieldError(r.field, r.error);
+          fields[r.field].focus();
+        } else {
+          formError.textContent = r.error;
+        }
+      });
+    });
+    $('[data-form-again]', sent).addEventListener('click', function () {
+      var keep = {
+        nome: fields.nome.value,
+        email: fields.email.value,
+        telefone: fields.telefone.value,
+      };
+      contactForm.reset();
+      fields.nome.value = keep.nome;
+      fields.email.value = keep.email;
+      fields.telefone.value = keep.telefone;
+      tried = false;
+      updateCounter();
+      sent.hidden = true;
+      area.hidden = false;
+      fields.motivo.focus();
+    });
+    updateCounter();
+  }
 })();

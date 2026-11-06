@@ -972,6 +972,54 @@ html.motion .mist .m3 {
   animation: mist 34s ease-in-out infinite alternate;
 }
 
+.page-inicio .hero {
+  display: flex;
+  align-items: center;
+}
+
+.page-inicio .hero > .wrap {
+  width: min(1180px, calc(100% - 2 * var(--gutter)));
+}
+
+.hero-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  color: var(--white-80);
+  font-weight: 700;
+  text-decoration: none;
+  animation: fade-up 0.9s var(--ease) calc(var(--intro-delay) + 1.3s) both;
+}
+
+.hero-more span {
+  background: linear-gradient(var(--white), var(--white)) no-repeat 0 100% / 0% 1px;
+  transition: background-size 0.4s var(--ease);
+}
+
+.hero-more:hover {
+  color: var(--white);
+}
+
+.hero-more:hover span {
+  background-size: 100% 1px;
+}
+
+.hero-more svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.4s var(--spring);
+}
+
+.hero-more:hover svg {
+  transform: translateY(3px);
+}
+
 .hero-inner {
   position: relative;
   display: flex;
@@ -1828,35 +1876,47 @@ html.motion .mess {
   }
 }
 
-/* ---------- Galeria que anda para o lado conforme a rolagem ---------- */
+/* ---------- Carrossel das telas ---------- */
 
-.gallery-stage {
+.gallery {
   position: relative;
-  padding: clamp(80px, 10vw, 120px) 0;
-  overflow: hidden;
-}
-
-.gallery.is-live .gallery-stage {
-  position: sticky;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100vh;
-  height: 100svh;
-  padding: 70px 0 30px;
+  padding: clamp(80px, 10vw, 130px) 0 clamp(60px, 8vw, 100px);
 }
 
 .gallery .head {
-  margin-bottom: clamp(22px, 4vh, 44px);
+  margin-bottom: clamp(24px, 4vw, 44px);
+}
+
+.carousel {
+  position: relative;
 }
 
 .gallery-track {
+  position: relative;
   display: flex;
-  gap: clamp(24px, 4vw, 56px);
-  width: max-content;
-  padding: 0 max(var(--gutter), calc((100vw - 1180px) / 2));
-  will-change: transform;
+  gap: clamp(20px, 3vw, 40px);
+  padding: 14px calc(50vw - min(380px, 42vw)) 34px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  cursor: grab;
+  outline-offset: -6px;
+}
+
+.gallery-track::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery-track.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+  user-select: none;
+}
+
+.gallery-track.is-dragging img {
+  pointer-events: none;
 }
 
 .slide {
@@ -1866,18 +1926,22 @@ html.motion .mess {
   align-items: center;
   gap: 32px;
   flex: none;
-  width: min(760px, 78vw);
+  width: min(760px, 84vw);
   padding: 26px 30px 26px 26px;
   border-radius: 32px;
   background: var(--white);
   color: var(--ink);
   box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.75);
+  scroll-snap-align: center;
   transform: scale(calc(0.92 + var(--focus) * 0.08));
-  opacity: calc(0.72 + var(--focus) * 0.28);
+  opacity: calc(0.6 + var(--focus) * 0.4);
+  transition:
+    transform 0.25s linear,
+    opacity 0.25s linear;
 }
 
 .slide .phone {
-  --w: clamp(160px, 22vh, 230px);
+  --w: clamp(170px, 20vw, 230px);
   box-shadow:
     0 30px 60px -24px rgba(43, 31, 33, 0.55),
     inset 0 0 0 1.5px rgba(255, 255, 255, 0.09);
@@ -1919,34 +1983,85 @@ html.motion .mess {
   background: var(--bordo);
 }
 
-.gallery-progress {
-  width: min(320px, 60vw);
-  height: 3px;
-  margin: clamp(22px, 4vh, 40px) auto 0;
-  overflow: hidden;
-  border-radius: 3px;
-  background: var(--line);
+.car-btn {
+  position: absolute;
+  top: calc(50% - 10px);
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--bordo);
+  box-shadow: 0 16px 34px -14px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  translate: 0 -50%;
+  transition:
+    transform 0.3s var(--spring),
+    opacity 0.25s ease;
 }
 
-.gallery-progress span {
-  display: block;
-  height: 100%;
+.car-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.car-btn:hover {
+  transform: scale(1.08);
+}
+
+.car-btn:active {
+  transform: scale(0.95);
+}
+
+.car-btn[disabled] {
+  opacity: 0.35;
+  cursor: default;
+  transform: none;
+}
+
+.car-prev {
+  left: max(var(--gutter), calc(50% - 620px));
+}
+
+.car-next {
+  right: max(var(--gutter), calc(50% - 620px));
+}
+
+.car-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.car-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: var(--white-40);
+  cursor: pointer;
+  transition:
+    width 0.45s var(--spring),
+    background-color 0.3s ease;
+}
+
+.car-dots button[aria-current='true'] {
+  width: 28px;
   background: var(--white);
-  transform: scaleX(var(--g, 0));
-  transform-origin: left;
 }
 
 @media (max-width: 900px) {
   .gallery-track {
-    width: auto;
-    overflow-x: auto;
-    padding: 4px var(--gutter) 20px;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-  }
-
-  .gallery-track::-webkit-scrollbar {
-    display: none;
+    padding: 10px 8vw 26px;
   }
 
   .slide {
@@ -1955,33 +2070,63 @@ html.motion .mess {
     width: 84vw;
     padding: 22px 18px;
     text-align: center;
-    scroll-snap-align: center;
-    transform: none;
-    opacity: 1;
   }
 
   .slide .phone {
-    --w: min(190px, 50vw);
+    --w: min(165px, 44vw);
   }
 
-  .gallery-progress {
+  .slide {
+    gap: 18px;
+  }
+
+  .slide p {
+    font-size: 1rem;
+  }
+
+  .car-btn {
     display: none;
   }
 }
 
-/* ---------- Funções em cartões brancos ---------- */
+/* ---------- Funções em cartões brancos, passando sozinhos ---------- */
 
-.bento {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.tiles-marquee {
+  overflow: hidden;
+  padding: 10px 0 30px;
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.tiles-track {
+  display: flex;
   gap: 18px;
+  width: max-content;
+  padding-right: 18px;
+}
+
+html.motion .tiles-track {
+  animation: marquee 70s linear infinite;
+}
+
+.tiles-marquee:hover .tiles-track,
+.tiles-marquee:focus-within .tiles-track {
+  animation-play-state: paused;
+}
+
+html.reduce .tiles-marquee {
+  overflow-x: auto;
+  mask-image: none;
+  -webkit-mask-image: none;
 }
 
 .tile {
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 380px;
+  flex: none;
+  width: 330px;
+  height: 420px;
   padding: 26px 26px 0;
   overflow: hidden;
   border-radius: 28px;
@@ -1990,13 +2135,8 @@ html.motion .mess {
   box-shadow: 0 30px 70px -40px rgba(0, 0, 0, 0.75);
 }
 
-.tile-tilt {
-  transform: perspective(900px) rotateX(var(--trx, 0deg)) rotateY(var(--try, 0deg));
-  transition: transform 0.5s var(--ease);
-}
-
 .tile.is-wide {
-  grid-column: span 2;
+  width: 520px;
 }
 
 .tile h3 {
@@ -2016,19 +2156,23 @@ html.motion .mess {
 .tile-shot {
   position: relative;
   flex: 1;
-  min-height: 190px;
   margin-top: 22px;
 }
 
+/* A tela inteira na proporção certa (390 × 800), cortada só embaixo pelo cartão. */
 .tile-shot img {
   position: absolute;
   left: 50%;
   top: 0;
-  width: min(250px, 80%);
+  width: 220px;
+  height: auto;
+  aspect-ratio: 390 / 800;
+  object-fit: cover;
+  object-position: top;
   translate: -50% 0;
   border: 6px solid #1c1214;
   border-bottom: 0;
-  border-radius: 26px 26px 0 0;
+  border-radius: 28px 28px 0 0;
   box-shadow: 0 -8px 30px -12px rgba(43, 31, 33, 0.35);
   transition: translate 0.6s var(--ease);
 }
@@ -2039,37 +2183,40 @@ html.motion .mess {
 
 .tile.is-wide .tile-shot img {
   left: 30%;
-  width: min(240px, 40%);
 }
 
 .tile.is-wide .tile-shot img + img {
-  left: 70%;
-  top: 30px;
+  left: 72%;
+  top: 34px;
 }
 
 .more-link {
   display: flex;
   justify-content: center;
-  margin-top: 40px;
-}
-
-@media (max-width: 960px) {
-  .bento {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  margin-top: 34px;
 }
 
 @media (max-width: 620px) {
-  .bento {
-    grid-template-columns: 1fr;
+  .tile {
+    width: 300px;
+    height: 400px;
   }
 
   .tile.is-wide {
-    grid-column: auto;
+    width: 300px;
   }
 
-  .tile {
-    min-height: 340px;
+  .tile-shot img {
+    width: 190px;
+  }
+
+  /* No celular, o cartão largo mostra uma tela só, para caber inteiro. */
+  .tile.is-wide .tile-shot img {
+    left: 50%;
+  }
+
+  .tile.is-wide .tile-shot img + img {
+    display: none;
   }
 }
 
@@ -2230,14 +2377,71 @@ html.motion .quote.is-in blockquote::before {
 
 .final {
   position: relative;
-  padding: clamp(110px, 13vw, 180px) 0;
+  padding: 290px 0 clamp(100px, 12vw, 160px);
   overflow: hidden;
   text-align: center;
 }
 
-.final .beam {
-  top: -5%;
-  height: 110%;
+.lamp {
+  position: absolute;
+  top: 110px;
+  left: 50%;
+  z-index: 2;
+  translate: -50% 0;
+}
+
+.lamp-halo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  translate: -50% -50%;
+  /* Termina transparente na borda do círculo e cabe inteiro dentro da seção (sem corte reto). */
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 236, 240, 0.55),
+    rgba(255, 214, 224, 0.14) 50%,
+    rgba(255, 214, 224, 0) 100%
+  );
+  pointer-events: none;
+}
+
+html.motion .lamp-halo {
+  animation: halo 5s ease-in-out infinite;
+}
+
+.final-mark {
+  position: relative;
+  display: block;
+  width: 84px;
+  height: auto;
+  filter: drop-shadow(0 0 16px rgba(255, 240, 244, 0.9))
+    drop-shadow(0 0 40px rgba(255, 214, 224, 0.6));
+}
+
+/* O feixe começa logo abaixo da casa e abre para baixo. */
+.beam-lamp {
+  position: absolute;
+  left: 50%;
+  top: 152px;
+  width: min(1200px, 150vw);
+  height: calc(100% - 152px);
+  translate: -50% 0;
+  clip-path: polygon(47.5% 0, 52.5% 0, 94% 100%, 6% 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 236, 240, 0.62),
+    rgba(255, 214, 224, 0.18) 40%,
+    rgba(255, 214, 224, 0) 88%
+  );
+  filter: blur(14px);
+  pointer-events: none;
+}
+
+html.motion .beam-lamp {
+  animation: beam 7s ease-in-out infinite;
 }
 
 .final-inner {
@@ -2245,17 +2449,6 @@ html.motion .quote.is-in blockquote::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.final-mark {
-  width: 84px;
-  height: auto;
-  margin-bottom: 26px;
-  filter: drop-shadow(0 0 20px rgba(255, 220, 228, 0.6));
-}
-
-html.motion .final-mark {
-  animation: breathe 5s ease-in-out infinite;
 }
 
 .final h2 {
@@ -2266,19 +2459,26 @@ html.motion .final-mark {
   line-height: 1;
 }
 
-.final p {
+.final-inner > p {
   max-width: 34rem;
   margin: 0 0 34px;
   color: var(--white-80);
   font-size: 1.15rem;
 }
 
-.inline-wrap {
+.final-form {
   width: min(520px, 100%);
+  margin: 28px auto 0;
 }
 
-.final .inline-wrap {
-  margin-top: 28px;
+.inline-wrap {
+  width: min(520px, 100%);
+  margin-inline: auto;
+}
+
+.final .inline-msg,
+.final .inline-legal {
+  text-align: center;
 }
 
 /* ---------- Páginas internas ---------- */
@@ -2899,6 +3099,216 @@ html.motion .final-mark {
   }
 }
 
+.contact-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 18px;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.contact-form-card {
+  padding: clamp(22px, 3.5vw, 36px);
+  border-radius: 28px;
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 0 40px 90px -45px rgba(0, 0, 0, 0.8);
+}
+
+.contact-form-card h2 {
+  margin: 0 0 6px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.8rem;
+  color: var(--bordo);
+}
+
+.contact-form-card > p {
+  margin: 0 0 22px;
+  color: var(--ink-muted);
+}
+
+.contact-form {
+  display: grid;
+  gap: 16px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field > span {
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.field > span em {
+  color: var(--ink-muted);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0 16px;
+  border: 1.5px solid var(--ink-line);
+  border-radius: 14px;
+  background: #fbf9f9;
+  color: var(--ink);
+  font: inherit;
+  font-size: 1.02rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.field input,
+.field select {
+  height: 52px;
+}
+
+.field select {
+  appearance: none;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237a1f2e' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  cursor: pointer;
+}
+
+.field textarea {
+  min-height: 150px;
+  padding: 14px 16px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--bordo);
+  background-color: var(--white);
+  box-shadow: 0 0 0 4px rgba(122, 31, 46, 0.12);
+}
+
+.field.is-invalid input,
+.field.is-invalid select,
+.field.is-invalid textarea {
+  border-color: var(--critical);
+}
+
+html.motion .field.is-shaking input,
+html.motion .field.is-shaking select,
+html.motion .field.is-shaking textarea {
+  animation: shake 0.42s ease;
+}
+
+.field-msg {
+  min-height: 0;
+  margin: 0;
+  color: var(--critical);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.char-count {
+  justify-self: end;
+  color: var(--ink-muted);
+  font-size: 0.8rem;
+  transition: color 0.2s ease;
+}
+
+.char-count.is-near {
+  color: var(--critical);
+  font-weight: 700;
+}
+
+.form-error {
+  margin: 0;
+  color: var(--critical);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.form-error:empty {
+  display: none;
+}
+
+.form-submit {
+  justify-content: center;
+  width: 100%;
+  height: 54px;
+  font-size: 1.05rem;
+}
+
+.form-submit.is-loading {
+  pointer-events: none;
+  opacity: 0.88;
+}
+
+.form-submit.is-loading .spinner {
+  display: inline-block;
+}
+
+.form-legal {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 0.82rem;
+}
+
+.form-legal a {
+  color: var(--bordo);
+}
+
+.form-done {
+  padding: 30px 6px 10px;
+  text-align: center;
+  animation: step-in 0.5s var(--ease) both;
+}
+
+.form-done h2 {
+  margin: 0 0 8px;
+}
+
+.form-done p {
+  margin: 0 auto 22px;
+  max-width: 28rem;
+  color: var(--ink-muted);
+}
+
+.contact-aside {
+  display: grid;
+  gap: 18px;
+}
+
+.contact-aside .contact-card h2 {
+  font-size: 1.35rem;
+}
+
+@media (max-width: 860px) {
+  .contact-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ---------- Documentos (privacidade, termos, exclusão de conta) ---------- */
 
 .doc {
@@ -3151,6 +3561,17 @@ html.motion .final-mark {
   width: 13px;
   height: 13px;
   fill: currentColor;
+}
+
+/* Google Play com as cores da marca: fundo branco para o ícone aparecer. */
+.waitlist-badge[data-badge='android'] {
+  background: var(--white);
+  box-shadow: 0 4px 12px -4px rgba(43, 31, 33, 0.45);
+}
+
+.waitlist-badge[data-badge='android'] svg {
+  width: 15px;
+  height: 15px;
 }
 
 .waitlist[data-platform='android'] [data-badge='android'],
@@ -3672,6 +4093,18 @@ html.motion .final-mark {
 @keyframes marquee {
   to {
     transform: translateX(-50%);
+  }
+}
+
+@keyframes halo {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
   }
 }
 

@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Contato e suporte | Rentable</title>
+    <title>Fale conosco | Rentable</title>
     <meta
       name="description"
-      content="Fale com o Rentable e veja as respostas para os problemas mais comuns no app."
+      content="Envie sua dúvida, problema ou sugestão sobre o Rentable pelo formulário e receba a resposta no seu e-mail."
     />
     <meta name="theme-color" content="#4F1019" />
     <link rel="canonical" href="https://rentable.com.br/suporte/" />
@@ -15,10 +15,10 @@
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content="Rentable" />
-    <meta property="og:title" content="Contato e suporte | Rentable" />
+    <meta property="og:title" content="Fale conosco | Rentable" />
     <meta
       property="og:description"
-      content="Fale com o Rentable e veja as respostas para os problemas mais comuns no app."
+      content="Envie sua dúvida, problema ou sugestão sobre o Rentable pelo formulário e receba a resposta no seu e-mail."
     />
     <meta property="og:url" content="https://rentable.com.br/suporte/" />
     <meta property="og:image" content="https://rentable.com.br/assets/og.png" />
@@ -75,6 +75,13 @@
               <path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" /></svg
             >Início</a
           >
+          <a class="pill-link" href="/sobre/"
+            ><svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 11v6" />
+              <path d="M12 7.5h.01" /></svg
+            >Sobre</a
+          >
           <a class="pill-link" href="/funcionalidades/"
             ><svg viewBox="0 0 24 24" aria-hidden="true">
               <rect x="3" y="3" width="7" height="7" rx="1.5" />
@@ -93,7 +100,7 @@
           <a class="pill-link" href="/suporte/" aria-current="page"
             ><svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg
-            >Contato</a
+            >Fale conosco</a
           >
         </nav>
         <a class="nav-cta magnetic" href="/#baixar" data-open-waitlist>Baixar o app</a>
@@ -110,9 +117,10 @@
     </header>
     <nav class="menu-sheet" id="menu" aria-label="Páginas" data-menu>
       <a href="/">Início</a>
+      <a href="/sobre/">Sobre</a>
       <a href="/funcionalidades/">Funcionalidades</a>
       <a href="/duvidas/">Dúvidas</a>
-      <a href="/suporte/" aria-current="page">Contato</a>
+      <a href="/suporte/" aria-current="page">Fale conosco</a>
       <a href="/#baixar" data-open-waitlist>Baixar o app</a>
     </nav>
 
@@ -121,97 +129,133 @@
         <div class="beam" aria-hidden="true"></div>
         <div class="beam-core" aria-hidden="true"></div>
         <div class="wrap page-hero-inner">
-          <span class="badge"><i></i>Contato e suporte</span>
-          <h1 data-split>Fale com a gente</h1>
-          <p data-reveal>Dúvidas, problemas ou sugestões sobre o app: respondemos por e-mail.</p>
+          <span class="badge"><i></i>Atendimento</span>
+          <h1 data-split>Fale conosco</h1>
+          <p data-reveal>
+            Conte o que você precisa: a mensagem chega pronta para a nossa equipe e respondemos no
+            seu e-mail.
+          </p>
         </div>
       </section>
 
       <section class="section" style="padding-top: 20px">
-        <div class="wrap">
-          <div class="contact-grid">
-            <article class="contact-card" data-reveal>
-              <h2>Por e-mail</h2>
-              <p>
-                Conte o que aconteceu, em qual tela e, se puder, mande um print. Use o e-mail da sua
-                conta para a gente encontrar você mais rápido.
-              </p>
-              <div class="row">
-                <a
-                  class="btn-bordo"
-                  href="mailto:contato@rentable.com.br?subject=Suporte%20Rentable"
-                  >Escrever para contato@rentable.com.br</a
-                >
-                <button class="btn-soft" type="button" data-copy="contato@rentable.com.br">
-                  Copiar endereço
+        <div class="wrap contact-layout">
+          <article class="contact-form-card" data-reveal>
+            <div data-form-area>
+              <h2>Envie sua mensagem</h2>
+              <p>Os campos com descrição ajudam a gente a responder mais rápido.</p>
+              <form class="contact-form" data-contact-form novalidate>
+                <div class="field-row">
+                  <label class="field" data-field="nome">
+                    <span>Nome</span>
+                    <input
+                      name="nome"
+                      autocomplete="name"
+                      maxlength="120"
+                      required
+                      placeholder="Como podemos te chamar"
+                    />
+                    <small class="field-msg" data-field-msg></small>
+                  </label>
+                  <label class="field" data-field="telefone">
+                    <span>Telefone <em>(opcional)</em></span>
+                    <input
+                      name="telefone"
+                      type="tel"
+                      autocomplete="tel"
+                      inputmode="tel"
+                      maxlength="16"
+                      placeholder="(11) 98888-7777"
+                    />
+                    <small class="field-msg" data-field-msg></small>
+                  </label>
+                </div>
+                <label class="field" data-field="email">
+                  <span>E-mail</span>
+                  <input
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    inputmode="email"
+                    maxlength="254"
+                    required
+                    placeholder="nome@exemplo.com"
+                  />
+                  <small class="field-msg" data-field-msg></small>
+                </label>
+                <label class="field" data-field="motivo">
+                  <span>Motivo do contato</span>
+                  <select name="motivo" required>
+                    <option value="" selected disabled>Escolha uma opção</option>
+                    <option value="duvida">Dúvida sobre o app</option>
+                    <option value="problema">Problema ou erro no app</option>
+                    <option value="planos">Planos e assinatura</option>
+                    <option value="lista">Lista de espera e lançamento</option>
+                    <option value="privacidade">Privacidade e meus dados</option>
+                    <option value="exclusao">Excluir minha conta</option>
+                    <option value="sugestao">Sugestão</option>
+                    <option value="parceria">Parcerias e imprensa</option>
+                    <option value="outro">Outro assunto</option>
+                  </select>
+                  <small class="field-msg" data-field-msg></small>
+                </label>
+                <label class="field" data-field="mensagem">
+                  <span>Descreva o que aconteceu</span>
+                  <textarea
+                    name="mensagem"
+                    rows="6"
+                    maxlength="2000"
+                    required
+                    placeholder="Conte o que aconteceu, em qual tela e o que você esperava. Se for uma dúvida, escreva a pergunta como faria para um amigo."
+                  ></textarea>
+                  <small class="char-count" data-char-count>0 / 2000</small>
+                  <small class="field-msg" data-field-msg></small>
+                </label>
+                <div class="hp" aria-hidden="true">
+                  <input type="text" name="empresa" tabindex="-1" autocomplete="off" />
+                </div>
+                <p class="form-error" data-form-error aria-live="polite"></p>
+                <button class="btn-bordo form-submit" type="submit">
+                  <span>Enviar mensagem</span><i class="spinner" aria-hidden="true"></i>
                 </button>
+                <p class="form-legal">
+                  Usamos estes dados só para responder ao seu contato. Veja a
+                  <a href="/privacidade/#contato">Política de privacidade</a>.
+                </p>
+              </form>
+            </div>
+            <div class="form-done" data-form-done hidden>
+              <div class="done-mark" aria-hidden="true">
+                <svg viewBox="0 0 64 64">
+                  <circle cx="32" cy="32" r="29" />
+                  <path d="M19 33l9 9 17-18" /></svg
+                ><span class="burst"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
               </div>
-            </article>
+              <h2 tabindex="-1" data-done-title>Mensagem enviada!</h2>
+              <p data-done-text>Recebemos sua mensagem e respondemos no seu e-mail.</p>
+              <button class="btn-soft" type="button" data-form-again>Enviar outra mensagem</button>
+            </div>
+          </article>
+          <aside class="contact-aside">
             <article class="contact-card" data-reveal style="--i: 1">
-              <h2>Antes de escrever</h2>
+              <h2>Antes de enviar</h2>
               <p>
-                Muitas respostas já estão nas dúvidas frequentes: planos, Recebi, leitura de
-                contrato, avisos e seus dados.
+                Muitas respostas já estão nas dúvidas: planos, Recebi, leitura de contrato, avisos e
+                seus dados.
+              </p>
+              <div class="row"><a class="btn-soft" href="/duvidas/">Ver as dúvidas</a></div>
+            </article>
+            <article class="contact-card" data-reveal style="--i: 2">
+              <h2>Seus dados</h2>
+              <p>
+                Para excluir a conta ou pedir seus dados, use o formulário ou veja o passo a passo.
               </p>
               <div class="row">
-                <a class="btn-soft" href="/duvidas/">Ver as dúvidas</a>
-                <a class="btn-soft" href="/excluir-conta/">Excluir conta</a>
+                <a class="btn-soft" href="/excluir-conta/">Excluir conta</a
+                ><a class="btn-soft" href="/privacidade/">Privacidade</a>
               </div>
             </article>
-          </div>
-          <header class="head">
-            <h2 data-split>Respostas rápidas</h2>
-          </header>
-          <div class="faq-list">
-            <details data-reveal style="--i: 0">
-              <summary>Esqueci minha senha</summary>
-              <div class="answer">
-                <p>
-                  Na tela de entrada, toque em <b>Esqueci minha senha</b>. Enviamos um código para o
-                  seu e-mail; digite o código no app e crie a senha nova.
-                </p>
-              </div>
-            </details>
-            <details data-reveal style="--i: 1">
-              <summary>Não recebi o código por e-mail</summary>
-              <div class="answer">
-                <p>
-                  Olhe a caixa de spam e as abas de promoções. O remetente é rentable.com.br. Se não
-                  chegar em alguns minutos, peça um código novo no app.
-                </p>
-              </div>
-            </details>
-            <details data-reveal style="--i: 2">
-              <summary>Como cancelar a assinatura</summary>
-              <div class="answer">
-                <p>
-                  A assinatura é feita pela loja. No iPhone:
-                  <b>Ajustes › seu nome › Assinaturas</b>. No Android:
-                  <b>Google Play › perfil › Pagamentos e assinaturas › Assinaturas</b>. O plano
-                  continua até o fim do período já pago.
-                </p>
-              </div>
-            </details>
-            <details data-reveal style="--i: 3">
-              <summary>Como excluir minha conta</summary>
-              <div class="answer">
-                <p>
-                  No app, em <b>Mais › Configurações › Excluir conta</b>. Sem o app, veja
-                  <a href="/excluir-conta/">como pedir a exclusão por e-mail</a>.
-                </p>
-              </div>
-            </details>
-            <details data-reveal style="--i: 0">
-              <summary>O cálculo de multa e juros está diferente do contrato</summary>
-              <div class="answer">
-                <p>
-                  Confira a multa e os juros cadastrados no contrato do imóvel, em
-                  <b>Imóvel › Editar</b>, e o dia de vencimento. Os juros são proporcionais aos dias
-                  de atraso. Se mesmo assim algo não bater, escreva para a gente com o exemplo.
-                </p>
-              </div>
-            </details>
-          </div>
+          </aside>
         </div>
       </section>
     </main>
@@ -224,9 +268,10 @@
         </a>
         <p class="footer-tag">Organização e controle imobiliário em um só lugar.</p>
         <nav class="footer-links" aria-label="Rodapé">
+          <a href="/sobre/">Sobre</a>
           <a href="/funcionalidades/">Funcionalidades</a>
           <a href="/duvidas/">Dúvidas</a>
-          <a href="/suporte/">Contato e suporte</a>
+          <a href="/suporte/">Fale conosco</a>
           <a href="/privacidade/">Política de privacidade</a>
           <a href="/termos/">Termos de uso</a>
           <a href="/excluir-conta/">Excluir conta</a>
