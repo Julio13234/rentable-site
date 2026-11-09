@@ -1028,38 +1028,8 @@ html.motion .mist .m3 {
   text-align: center;
 }
 
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  height: 38px;
-  padding: 0 16px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--white);
-  font-size: 0.95rem;
-  font-weight: 600;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 0 30px -8px rgba(255, 214, 224, 0.5);
-  animation: fade-up 0.9s var(--ease) calc(var(--intro-delay) + 0.15s) both;
-}
-
-.badge i {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--white);
-}
-
-html.motion .badge i {
-  animation: dot-ping 2s ease-out infinite;
-}
-
 .lockup {
   position: relative;
-  margin-top: 24px;
   transform: translateY(calc(var(--t) * -70px)) scale(calc(1 + var(--t) * 0.12));
   opacity: calc(1 - var(--t) * 1.25);
 }
@@ -2506,10 +2476,6 @@ html.motion .beam-lamp {
 .page-hero p {
   max-width: 38rem;
   margin: 0 auto;
-}
-
-.page-hero .badge {
-  margin-bottom: 22px;
 }
 
 /* Passeio pelo app (página de funcionalidades). */
@@ -4006,16 +3972,6 @@ html.motion .field.is-shaking textarea {
   }
   to {
     transform: translateX(6%) translateY(-18px) scaleY(1.15);
-  }
-}
-
-@keyframes dot-ping {
-  0% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
-  }
-  70%,
-  100% {
-    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
   }
 }
 
