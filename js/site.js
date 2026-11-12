@@ -768,7 +768,7 @@
           })
           .then(function (body) {
             return res.ok && body && body.ok
-              ? { ok: true }
+              ? { ok: true, emailed: body.emailed === true }
               : { ok: false, error: (body && body.error) || fallback, field: body && body.field };
           });
       })
@@ -785,12 +785,13 @@
   };
 
   // Formulário curto (abertura e chamada final).
-  var inlineDone = function (wrap, email, already) {
+  var inlineDone = function (wrap, email, already, emailed) {
     wrap.innerHTML =
       '<div class="inline-done" role="status"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg><span>' +
       (already ? 'Você já está na lista com ' : 'Pronto! Avisamos em ') +
       escapeHtml(email) +
       (already ? '.' : ' quando o app chegar.') +
+      (emailed ? ' Mandamos uma confirmação para o seu e-mail.' : '') +
       '</span></div>';
   };
   $$('[data-inline-waitlist]').forEach(function (form) {
@@ -831,7 +832,7 @@
         button.disabled = false;
         if (r.ok) {
           remember(email, platform);
-          inlineDone(wrap, email, false);
+          inlineDone(wrap, email, false, r.emailed);
         } else {
           msg.textContent = r.error;
         }
@@ -898,12 +899,17 @@
     errorEl.textContent = '';
     field.classList.remove('is-invalid');
   };
-  var showDone = function (email, platform, already) {
+  var showDone = function (email, platform, already, emailed) {
     form.hidden = true;
     done.hidden = false;
     doneTitle.textContent = already ? 'Você já está na lista' : 'Pronto, você está na lista!';
     doneText.textContent =
-      'Avisamos em ' + email + ' assim que o Rentable chegar ' + WHERE[platform] + '.';
+      'Avisamos em ' +
+      email +
+      ' assim que o Rentable chegar ' +
+      WHERE[platform] +
+      '.' +
+      (emailed ? ' Mandamos uma confirmação para o seu e-mail (veja também o spam).' : '');
     doneTitle.focus();
   };
   var openWaitlist = function (platform, trigger) {
@@ -1013,7 +1019,7 @@
       submit.disabled = false;
       if (r.ok) {
         remember(email, platform);
-        showDone(email, platform, false);
+        showDone(email, platform, false, r.emailed);
       } else {
         errorEl.textContent = r.error;
       }
